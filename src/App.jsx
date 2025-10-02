@@ -1,18 +1,29 @@
 
 import './App.css'
+import Header from './components/header'
 import ProductCard from './components/productCard'
 
 function App() {
  
   return (
-    <>
-     <ProductCard name="Laptop" price="100,000.00" image="https://picsum.photos/id/0/200/300"/>
+    <div className="w-[600px] h-[600px] border- bg-gray-400 relative">
+      <div className="w-[500px] h-[500px] bg-amber-100 flex flex-col items-center justify-center">
+        <div className="w-[100px] h-[100px] bg-red-500">
 
-     <ProductCard name="Phone" price="50,000.00" image="https://picsum.photos/id/3/200/300"/>
+        </div>
+        <div className="w-[100px] h-[100px] bg-blue-500 fixed left-[550px] top-[550px]">
 
-     <ProductCard name="Watch" price="20,000.00" image="https://picsum.photos/id/4/200/300"/>
+        </div>
+        <div className="w-[100px] h-[100px] bg-green-500">
 
-    </>
+        </div>
+        <div className="w-[100px] h-[100px] bg-pink-700 absolute right-[80px] bottom-[80px]">
+
+        </div>
+
+      </div>
+
+    </div>
   )
 }
 
