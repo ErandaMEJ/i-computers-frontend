@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #edf2f4;
+  --color-secondary: #2b2d42;
+  --color-accent: #8d99ae;
+}
+
+    /* In your main CSS file, after @tailwind base; and before @tailwind components; */
+
+    /* Customize the entire scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px; /* Or any desired width */
+    }
+
+    /* Customize the scrollbar track (background) */
+    ::-webkit-scrollbar-track {
+      background-color: transparent; /* Tailwind's gray-100 equivalent */
+      
+    }
+
+    /* Customize the scrollbar thumb (draggable part) */
+    ::-webkit-scrollbar-thumb {
+      background-color: #888; /* Tailwind's gray-500 equivalent */
+      border-radius: 4px;
+    }
+
+    /* Optional: Hover state for the thumb */
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #555; /* Tailwind's gray-700 equivalent */
+    }
