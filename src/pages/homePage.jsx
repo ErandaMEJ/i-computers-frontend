@@ -5,7 +5,7 @@ export default function HomePage(){
     return(
         <div className="w-full h-full overflow-y-scroll max-h-full">
            <Header/>
-           <div className="w-full min-h-[calc(100%-100px)] ">
+           <div className="w-full min-h-[calc(100%-100px)]">
                 <Routes>
                     <Route path="/" element={<h1>Home Page</h1>} />
                     <Route path="/products" element={<h1>Products</h1>} />

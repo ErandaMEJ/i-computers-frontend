@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #edf2f4;
-  --color-secondary: #2b2d42;
-  --color-accent: #8d99ae;
-  --color-gold: #f3b017
+  --color-primary: #fbfbfb;
+  --color-secondary: #0d1011;
+  --color-accent: #2e8cd6;
+  --color-gold: #D3AF37
+
 }
 
     /* In your main CSS file, after @tailwind base; and before @tailwind components; */

@@ -24,6 +24,8 @@ export default function LoginPage(){
 
         console.log(res)
 
+        localStorage.setItem("token", res.data.token);
+
         if(res.data.role == "admin"){
             //window.location.href = "/admin";
             navigate("/admin");
@@ -53,13 +55,13 @@ export default function LoginPage(){
 
         <div className="w-full h-screen bg-[url('bg.jpg')] bg-center bg-cover bg-no-repeat flex" >
             <div className="w-[50%] h-full flex justify-center items-center flex-col p-[50px]">
-                <img src="/logo.png" alt="logo" className="w-[250px] mb-[10px] object-cover"/>
-                <h1 className="text-[50px] text-gold  text-shadow-lg/40  font-bold text-center">Powering Your Digital World.</h1>
-                <p className="text-[30px] text-white text-shadow-lg/30 italic text-center">Best computers, parts, and tech support across Sri Lanka.</p>
+                <img src="/logo.png" alt="logo" className="w-[250px] mb-[10px] object-cover backdrop-blur-[1px]"/>
+                <h1 className="text-[50px] text-gold  text-shadow-lg/40  font-bold text-center ">Powering Your Digital World.</h1>
+                <p className="text-[20px] text-white text-shadow-lg/35 italic text-center backdrop-blur-[1px]">Best computers, parts, and tech support across Sri Lanka.</p>
             </div>
 
             <div className="w-[50%] h-full flex justify-center items-center">
-                <div className="w-[450px] h-[600px] backdrop-blur-xl shadow-2xl rounded-2xl flex flex-col justify-center items-center p-[30px]  ">
+                <div className="w-[450px] h-[600px] backdrop-blur-lg shadow-2xl rounded-2xl flex flex-col justify-center items-center p-[30px]  ">
                     <h1 className="text-[40px] font-bold mb-[20px] text-primary text-shadow-white">Login</h1>
 
                     <input
