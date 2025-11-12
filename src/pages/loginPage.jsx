@@ -1,96 +1,113 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
 
-export default function LoginPage(){
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate()
+  async function login() {
+    console.log("Logging button clicked");
+    console.log("Email:", email);
+    console.log("Password:", password);
 
-    async function login(){
-        console.log("Logging button clicked");
-        console.log("Email:", email);
-        console.log("Password:", password);
+    try {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login", {
+        email: email,
+        password: password,
+      });
 
+      console.log(res);
+      localStorage.setItem("token", res.data.token);
 
-        try{
+      if (res.data.role == "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
 
-            const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login",{
-            email: email,
-            password: password
-        })
-
-        console.log(res)
-
-        localStorage.setItem("token", res.data.token);
-
-        if(res.data.role == "admin"){
-            //window.location.href = "/admin";
-            navigate("/admin");
-        }else{
-            //window.location.href = "/";
-            navigate("/");
-        }
-
-        //alert("Login successful! Welcome back.");
-
-        toast.success("Login successful! Welcome back.");
-
-        }catch(err){
-
-           // alert("Login failed! Please check your credentials and try again.");
-            toast.error("Login failed! Please check your credentials and try again.");
-
-            console.log("Error during login:")
-            console.log(err)
-        }
-
-
-        
+      toast.success("Login successful! Welcome back.");
+    } catch (err) {
+      toast.error("Login failed! Please check your credentials and try again.");
+      console.log("Error during login:");
+      console.log(err);
     }
+  }
 
-    return(
+  return (
+    <div className="w-full h-screen bg-[url('bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative overflow-hidden">
+      {/* Overlay gradient for better contrast */}
+      <div className="absolute inset-0 bg-secondary/60 backdrop-blur-sm"></div>
 
-        <div className="w-full h-screen bg-[url('bg.jpg')] bg-center bg-cover bg-no-repeat flex" >
-            <div className="w-[50%] h-full flex justify-center items-center flex-col p-[50px]">
-                <img src="/logo.png" alt="logo" className="w-[250px] mb-[10px] object-cover backdrop-blur-[1px]"/>
-                <h1 className="text-[50px] text-gold  text-shadow-lg/40  font-bold text-center ">Powering Your Digital World.</h1>
-                <p className="text-[20px] text-white text-shadow-lg/35 italic text-center backdrop-blur-[1px]">Best computers, parts, and tech support across Sri Lanka.</p>
-            </div>
-
-            <div className="w-[50%] h-full flex justify-center items-center">
-                <div className="w-[450px] h-[600px] backdrop-blur-lg shadow-2xl rounded-2xl flex flex-col justify-center items-center p-[30px]  ">
-                    <h1 className="text-[40px] font-bold mb-[20px] text-primary text-shadow-white">Login</h1>
-
-                    <input
-                        onChange={
-                            (e)=>{
-                                setEmail(e.target.value)
-                            }
-                        }
-                        
-                    type="email" placeholder="your email" className="w-full h-[50px] mb-[20px] rounded-lg border text-white border-accent p-[10px] text-[20px] focus:outline-none focus:ring-2 focus:ring-gold "/>
-
-                    <input
-                        onChange={
-                            (e)=>{
-                                setPassword(e.target.value)
-                            }
-                        }
-
-                    type="password" placeholder="your password" className="w-full h-[50px]  rounded-lg border text-white border-accent p-[10px] text-[20px] focus:outline-none focus:ring-2 focus:ring-gold "/>
-
-
-                    <p className="text-white not-italic w-full text-right mb-[10px]">Forgot your password? <Link to="/reset-password" className="text-gold underline italic">Reset</Link></p>.
-
-                    <button onClick={login}className="w-full h-[50px] bg-accent text-primary text-[20px] font-bold rounded-lg border-[2px] border-accent hover:bg-transparent hover:text-accent ">Login</button>
-                    <p className="text-primary mt-[20px] not-italic">Don't have an account? <Link to="/register" className="text-gold underline italic">Register</Link></p>
-                </div>
-
-            </div>
-            
+      <div className="relative z-10 flex w-full h-full">
+        {/* Left side */}
+        <div className="w-1/2 flex flex-col justify-center items-center p-10">
+          <img
+            src="/logo.png"
+            alt="logo"
+            className="w-[220px] mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+          />
+          <h1 className="text-[48px] font-bold text-gold text-center leading-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+            Powering Your Digital World
+          </h1>
+          <p className="text-[20px] text-primary italic mt-4 text-center max-w-[400px] leading-relaxed">
+            Best computers, parts, and tech support across Sri Lanka.
+          </p>
         </div>
-    )
+
+        {/* Right side - login box */}
+        <div className="w-1/2 flex justify-center items-center">
+          <div className="w-[420px] h-[600px] bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-8 flex flex-col items-center transition-all duration-300 ">
+            <h1 className="text-[42px] font-bold mb-6 text-primary tracking-wide">
+              Login
+            </h1>
+
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              placeholder="Enter your email"
+              className="w-full h-[50px] mb-[20px] rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
+            />
+
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              placeholder="Enter your password"
+              className="w-full h-[50px] mb-3 rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
+            />
+
+            <p className="text-primary text-sm w-full text-right mb-[15px]">
+              Forgot your password?{" "}
+              <Link
+                to="/reset-password"
+                className="text-gold underline hover:text-accent italic transition-colors"
+              >
+                Reset
+              </Link>
+            </p>
+
+            <button
+              onClick={login}
+              className="w-full h-[50px] bg-accent text-primary text-[20px] font-semibold rounded-lg border-2 border-accent 
+                         hover:bg-transparent hover:text-accent transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(46,140,214,0.4)]"
+            >
+              Login
+            </button>
+
+            <p className="text-primary mt-6 text-[16px]">
+              Don’t have an account?{" "}
+              <Link
+                to="/register"
+                className="text-gold underline italic hover:text-accent transition-colors"
+              >
+                Register
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -1,12 +1,123 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { PiPlus } from "react-icons/pi";
 import { Link } from "react-router-dom";
+import Loader from "../../components/loader";
 
-export default function AdminProductPage(){
-    return(
-        <div className="w-full h-full flex justify-center items-center  relative">
-            Product Page
+export default function AdminProductPage() {
+  const [products, setProducts] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
-            <Link to="/admin/add-product" className=" absolute right-[20px] bottom-[20px] w-[50px] h-[50px] flex justify-center items-center text-6xl border-[2px] rounded-full hover:text-white hover:bg-secondary"><PiPlus/></Link>
-        </div>
-    )
+  
+  useEffect(() => {
+    if (!loaded){
+      axios
+      .get(import.meta.env.VITE_BACKEND_URL + "/products")
+      .then((response) => {
+        console.log(response.data);
+        setProducts(response.data);
+        setLoaded(true);
+      });
+    }
+    
+  }, [loaded]);
+
+  return (
+    <div className="w-full min-h-screen bg-primary flex flex-col items-center p-10 relative text-secondary">
+      <h1 className="text-3xl font-semibold mb-6 text-secondary border-b-2 border-accent pb-2">
+        Product Management
+      </h1>
+
+      <div className="overflow-x-auto w-full bg-white shadow-xl rounded-2xl">
+        {loaded ? <table className="min-w-full text-sm text-left border-collapse">
+          <thead className="bg-accent text-white uppercase text-xs tracking-wider">
+            <tr>
+              <th className="py-3 px-4 rounded-tl-2xl">Image</th>
+              <th className="py-3 px-4">Product ID</th>
+              <th className="py-3 px-4">Name</th>
+              <th className="py-3 px-4">Price</th>
+              <th className="py-3 px-4">Label Price</th>
+              <th className="py-3 px-4">Category</th>
+              <th className="py-3 px-4">Brand</th>
+              <th className="py-3 px-4">Model</th>
+              <th className="py-3 px-4">Stock</th>
+              <th className="py-3 px-4">Available</th>
+              <th className="py-3 px-4 rounded-tr-2xl">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((item, index) => (
+              <tr
+                key={index}
+                className={`border-b hover:bg-accent/10 transition-all ${
+                  index % 2 === 0 ? "bg-primary" : "bg-white"
+                }`}
+              >
+                <td className="py-3 px-4">
+                  <img
+                    src={item.images[0]}
+                    alt={item.name}
+                    className="w-[40px] h-[40px] rounded-lg object-cover border border-gray-200 shadow-sm"
+                  />
+                </td>
+                <td className="py-3 px-4 font-medium">{item.productID}</td>
+                <td className="py-3 px-4">{item.name}</td>
+                <td className="py-3 px-4 text-accent font-semibold">
+                  Rs. {item.price.toLocaleString()}
+                </td>
+                <td className="py-3 px-4 text-gray-500 line-through">
+                  Rs. {item.labelledPrice.toLocaleString()}
+                </td>
+                <td className="py-3 px-4">{item.category}</td>
+                <td className="py-3 px-4">{item.brand}</td>
+                <td className="py-3 px-4">{item.model}</td>
+                <td className="py-3 px-4">{item.stock}</td>
+                <td className="py-3 px-4">
+                  <td
+                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                      item.isAvailable
+                        ? "bg-green-100 text-green-600"
+                        : "bg-red-100 text-red-600"
+                    }`}
+                  >
+                    {item.isAvailable ? "Yes" : "No"}
+                  </td>
+                </td>
+
+                <td className="py-3 px-4 text-center">
+                  <button onClick={
+                    ()=>{
+                      const token = localStorage.getItem("token")
+                      axios.delete(import.meta.env.VITE_BACKEND_URL + "/products/" + item.productID, {
+                        headers: {
+                          Authorization: `Bearer ${token}`
+                        }
+                      }).then(
+                        ()=>{
+                          toast.success("Product deleted successfully");
+                          setLoaded(false)
+                        }
+                      )
+                    }
+                  } className="w-[100px] bg-red-700 flex justify-center items-center text-primary py-2 rounded-full hover:bg-red-900 transition-colors font-medium cursor-pointer">
+                    Delete
+                  </button>
+                </td>
+                
+              </tr>
+            ))}
+          </tbody>
+        </table>:<Loader />}
+      </div>
+
+      <Link
+        to="/admin/add-product"
+        className="fixed right-[30px] bottom-[30px] w-[60px] h-[60px] flex justify-center items-center 
+        text-5xl text-white bg-accent rounded-full shadow-lg hover:bg-gold transition-all duration-300 hover:scale-110"
+      >
+        <PiPlus />
+      </Link>
+    </div>
+  );
 }
