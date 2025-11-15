@@ -2,12 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { PiPlus } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/loader";
+import ProductDeleteButton from "../../components/productDeleteButton";
 
 export default function AdminProductPage() {
   const [products, setProducts] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const navigate = useNavigate();
 
   
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function AdminProductPage() {
       </h1>
 
       <div className="overflow-x-auto w-full bg-white shadow-xl rounded-2xl">
-        {loaded ? <table className="min-w-full text-sm text-left border-collapse">
+        {loaded ? <table className="min-w-full text-sm text-center border-collapse">
           <thead className="bg-accent text-white uppercase text-xs tracking-wider">
             <tr>
               <th className="py-3 px-4 rounded-tl-2xl">Image</th>
@@ -85,24 +87,24 @@ export default function AdminProductPage() {
                   </td>
                 </td>
 
-                <td className="py-3 px-4 text-center">
-                  <button onClick={
-                    ()=>{
-                      const token = localStorage.getItem("token")
-                      axios.delete(import.meta.env.VITE_BACKEND_URL + "/products/" + item.productID, {
-                        headers: {
-                          Authorization: `Bearer ${token}`
-                        }
-                      }).then(
-                        ()=>{
-                          toast.success("Product deleted successfully");
-                          setLoaded(false)
-                        }
-                      )
-                    }
-                  } className="w-[100px] bg-red-700 flex justify-center items-center text-primary py-2 rounded-full hover:bg-red-900 transition-colors font-medium cursor-pointer">
-                    Delete
-                  </button>
+                <td className="py-3 px-4   flex">
+                    <div className="inline-flex items-center gap-2 ">
+                      {/* <Link 
+                          to="/admin/update-product"
+                          className="my-1   flex justify-center items-center font-bold  px-3 py-2 bg-accent/20 text-xs text-accent rounded-2xl text-shadow-accent hover:bg-accent hover:text-white transition-all duration-300"
+                          state={item}>                          
+                          Edit
+                      </Link> */}
+                      
+                      <button onClick={()=>{
+                          navigate("/admin/update-product", {state: item})
+                        }}
+                          className="my-1  flex justify-center items-center font-bold  px-6 py-2 bg-accent/20 text-xs text-accent rounded-2xl text-shadow-accent hover:bg-accent hover:text-white transition-all duration-300">
+                          Edit
+                      </button>
+                          
+                    <ProductDeleteButton productID = {item.productID} reload={()=>{setLoaded(false)}}/>
+                    </div>
                 </td>
                 
               </tr>

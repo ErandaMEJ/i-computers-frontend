@@ -2,35 +2,39 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { AiFillProduct } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import uploadFile from "../../utils/mediaUpload";
 
-export default function AdminAddProductPage(){
-    const [productID, setProductID] = useState("");
-    const [name, setName] = useState("");
-    const [altNames, setAltNames] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState(0);
-    const [labelledPrice, setLabelledPrice] = useState(0);
+export default function AdminUpdateProductPage(){
+    const location = useLocation();
+    const [productID, setProductID] = useState(location.state.productID);
+    const [name, setName] = useState(location.state.name);
+    const [altNames, setAltNames] = useState(location.state.altNames.join(","));
+    const [description, setDescription] = useState(location.state.description);
+    const [price, setPrice] = useState(location.state.price);
+    const [labelledPrice, setLabelledPrice] = useState(location.state.labelledPrice);
     const [files, setFiles] = useState([]);
-    const [category, setCategory] = useState("");
-    const [brand, setBrand] = useState("");
-    const [model, setModel] = useState("");
-    const [stock, setStock] = useState(0);
-    const [isAvailable, setIsAvailable] = useState(false);
+    const [category, setCategory] = useState(location.state.category);
+    const [brand, setBrand] = useState(location.state.brand);
+    const [model, setModel] = useState(location.state.model);
+    const [stock, setStock] = useState(location.state.stock);
+    const [isAvailable, setIsAvailable] = useState(location.state.isAvailable);
     const navigate = useNavigate();
 
-    async function addProduct(){
+    if(!location.state){
+        window.location.href = "/admin/products";
+    }
+
+    async function updateProduct(){
 
         
         const token = localStorage.getItem("token");
         if(token == null){
-            toast.error("You must be logged in as an admin to add products.");
+            toast.error("You must be logged in as an admin to update products.");
             navigate("/login");
             return;
         }
-        console.log(files)
-
+       
         const imagePromises = []
 
         // files.forEach(
@@ -45,12 +49,16 @@ export default function AdminAddProductPage(){
             imagePromises.push(promise)
         }
 
-        const images = await Promise.all(imagePromises).catch((err)=>{
+        let images = await Promise.all(imagePromises).catch((err)=>{
             toast.error("Error uploading images.Please try again.");
             console.log("Error uploading images:");
             console.log(err);
             return;
         })
+
+        if(images.length == 0){
+            images = location.state.images
+        }
        
         if(productID=="" || name=="" || description=="" || category=="" || brand=="" || model==""){
             toast.error("Please fill in all required fields.");
@@ -60,8 +68,7 @@ export default function AdminAddProductPage(){
             const altNamesArray = altNames.split(",")
             
 
-            await axios.post(import.meta.env.VITE_BACKEND_URL + "/products/", {
-            productID: productID,
+            await axios.put(import.meta.env.VITE_BACKEND_URL + "/products/"+productID, {            
             name: name,
             altNames: altNamesArray,
             description: description,
@@ -78,12 +85,12 @@ export default function AdminAddProductPage(){
                 Authorization: "Bearer " +token
             }
         })
-        toast.success("Product added successfully!");
+        toast.success("Product Updated successfully!");
         navigate("/admin/products");
 
         }catch(err){   
-            toast.error("Error adding product. Please try again.");
-            console.log("Error adding product:");
+            toast.error("Error updating product. Please try again.");
+            console.log("Error updating product:");
             console.log(err);
         }
     }
@@ -93,7 +100,7 @@ export default function AdminAddProductPage(){
             <div className="w-[800px] bg-accent/75  rounded-2xl p-[40px] shadow-2xl overflow-y-visible">
 
                 <h1 className="w-full text-xl font-bold text-secondary mb-[20px] flex items-center gap-[10px]">
-                    <AiFillProduct  />Add New Product
+                    <AiFillProduct  />Update Product
                 </h1>
                 
                 <div className="w-full bg-white p-[20px] flex flex-row flex-wrap justify-between rounded-xl shadow-2xl">
@@ -101,8 +108,12 @@ export default function AdminAddProductPage(){
 
                     <div className="my-[10px] w-[40%]">
                         <label>Product ID</label>
-                        <input type="text" value={productID} onChange={(e) => {setProductID(e.target.value)}} className="w-full h-[40px] rounded-2xl focus:outline-none focus:ring-1 ring-accent border border-accent shadow-2xl px-[20px]"/>
-                        <p className="text-sm text-gray-500 w-full  text-right">Provide a unique product ID</p>
+                        <input 
+                            disabled 
+                            type="text" 
+                            value={productID} 
+                            onChange={(e) => {setProductID(e.target.value)}} 
+                            className="w-full h-[40px] rounded-2xl focus:outline-none focus:ring-1 ring-accent border border-accent shadow-2xl px-[20px]"/>                        
                     </div>
 
                     <div className="my-[10px] w-[40%]">
@@ -181,7 +192,7 @@ export default function AdminAddProductPage(){
                     </div>
                     
                     <Link to="/admin/products" className="w-[49%] h-[50px] font-bold bg-red-600 text-white rounded-2xl mt-[20px] hover:bg-red-800 flex items-center justify-center">Cancel</Link>
-                    <button onClick={addProduct} className="w-[49%] h-[50px] font-bold bg-secondary text-white rounded-2xl mt-[20px] hover:bg-secondary/60 ">Add Product</button>
+                    <button onClick={updateProduct} className="w-[49%] h-[50px] font-bold bg-secondary text-white rounded-2xl mt-[20px] hover:bg-secondary/60 ">Update Product</button>
 
                 </div>
             </div>
