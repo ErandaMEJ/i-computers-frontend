@@ -5,6 +5,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 export default function CheckoutPage (){
     const location = useLocation()
     const navigate = useNavigate()
+    const [name, setName] = useState("")
+    const [address, setAddress] = useState("")
+    const [pone, setPhone] = useState("")
 
     const [cart, setCart] = useState(location.state)
 
@@ -85,7 +88,19 @@ export default function CheckoutPage (){
                     )
                 }
                )
-           }
+           } 
+           <div className="w-[55%] h-[150px] rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between items-center">
+                <button 
+                    className="self-center ml-4 px-6 py-3 rounded bg-accent text-white hover:bg-accent/80 transition">
+                       Order Now
+                </button>
+                                
+                                <span className="pr-3 text-xl font-bold min-w-[150px] text-right">
+                                    LKR. {getCartTotal().toFixed(2)}
+                                </span>
+
+                    
+           </div>
            <div className="w-[55%] h-[150px] rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between items-center">
                 <button 
                     className="self-center ml-4 px-6 py-3 rounded bg-accent text-white hover:bg-accent/80 transition">
