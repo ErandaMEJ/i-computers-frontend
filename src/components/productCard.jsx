@@ -31,8 +31,12 @@ export default function ProductCard(props){
                 </div>
 
                 <div className="w-full h-[150px] bottom-0 opacity-0 absolute buttons bg-white flex flex-row gap-4 justify-center items-center transition-opacity duration-400">
-                    <Link to="/cart" className="w-[150px] h-[50px] border-2 font-semibold border-accent text-accent hover:bg-accent hover:text-white transition-colors duration-200 text-center flex justify-center items-center">Add to cart</Link>
-                    <Link to="/product" className="w-[150px] h-[50px] border-2 font-semibold border-accent text-accent hover:bg-accent hover:text-white transition-colors duration-200 text-center flex justify-center items-center">View Details</Link>
+                    {/* <Link to="/cart" className="w-[150px] h-[50px] border-2 font-semibold border-accent text-accent hover:bg-accent hover:text-white transition-colors duration-200 text-center flex justify-center items-center">Add to cart</Link> */}
+                    <Link 
+                        to={"/overview/"+product.productID} 
+                        className="w-[150px] h-[50px] border-2 font-semibold border-accent text-accent hover:bg-accent hover:text-white transition-colors duration-200 text-center flex justify-center items-center">
+                        View Details
+                    </Link>
                   
                 </div>
 
