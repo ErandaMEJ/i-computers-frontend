@@ -16,7 +16,7 @@ export default function ProductOverview() {
 
     useEffect(() => {
         if(status == "loading"){
-        axios
+    axios
         .get(import.meta.env.VITE_BACKEND_URL + "/products/" + params.productID)
         .then((response) => {
            
@@ -73,12 +73,12 @@ export default function ProductOverview() {
                             <button
                                 onClick={()=>{
                                     navigate("/checkout", {state : [{
-                                        productID : product.productID,
-                                        name : product.name,
-                                        price : product.price,
-                                        labelledPrice : product.labelledPrice,
-                                        image : product.images[0],
-                                        quantity : 1
+                                        productID: product.productID,
+                                        name: product.name,
+                                        price: product.price,
+                                        labelledPrice: product.labelledPrice,                                        
+                                        quantity: 1,
+                                        image: product.images[0],
                                     }
                                     
                                     ]})

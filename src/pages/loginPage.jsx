@@ -29,6 +29,7 @@ export default function LoginPage() {
       }
 
       toast.success("Login successful! Welcome back.");
+      
     } catch (err) {
       toast.error("Login failed! Please check your credentials and try again.");
       console.log("Error during login:");
