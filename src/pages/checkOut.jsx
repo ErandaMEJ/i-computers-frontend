@@ -73,11 +73,27 @@ export default function CheckoutPage (){
                 (item, index)=>{
                     return(
                         
-                        <div className="w-[55%] h-[150px] rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between">
+                        <div 
+                            key={index} 
+                            className="w-full lg:w-[55%] h-[150px] rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between">
+                            
+                            <h1 className="lg:hidden w-full overflow-hidden h-[20px] absolute top-[0px]">{item.name}</h1>
+
+                            <div className="h-full flex flex-col">
                             <img 
                                 src={item.image} 
                                 className="h-full aspect-square object-cover"
                             />
+                               {
+                                    item.labelledPrice > item.price && 
+                                    <h2 className="text-sm line-through decoration-gold/70 decoration-2 mr-2">
+                                        LKR. {item.labelledPrice.toFixed(2)}
+                                    </h2>
+                            }
+                                    <h2 className="text-sm text-accent font-semibold ">
+                                        LKR. {item.price.toFixed(2)}
+                                    </h2>
+                            </div>
                             <div className="flex flex-col justify-center pl-4 w-[300px]">
                                 <h1 className="text-2xl font-semibold relative hover:[&_.tooltip]:opacity-100">
                                     <span className="opacity-0 tooltip italic text-sm absolute bottom-[-25px] bg-accent text-white px-2 rounded-2xl">

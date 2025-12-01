@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Loader from "../../components/loader";
-import ViewOrderInfor from "../../components/viewOrderInfoy";
+import ViewOrderInfor from "../../components/viewOrderInfor";
 
 
 export default function AdminOrdersPage() {
@@ -40,7 +40,7 @@ export default function AdminOrdersPage() {
         <table 
             className="w-full max-w-7xl justify-center border-separate border-spacing-0 overflow-hidden text-sm  table-auto  ">
           <thead 
-              className="sticky top-0 z-10 bg-accent text-white uppercase text-xs ">
+              className="sticky top-0  bg-accent text-white uppercase text-xs ">
             <tr>
 
               <th className="py-3 px-4 rounded-tl-2xl">Order ID</th>
@@ -69,7 +69,7 @@ export default function AdminOrdersPage() {
                 <td className="py-3 px-4">{new Date(order.date).toLocaleDateString()}</td>
                 <td className="py-3 px-4">{order.status}</td>
                 <td className="py-3 px-4">LKR. {order.total.toFixed(2)}</td>
-                <td className="py-3 px-4"><ViewOrderInfor/></td>                
+                <td className="py-3 px-4"><ViewOrderInfor order ={order}/></td>                
                 
                 
               </tr>
