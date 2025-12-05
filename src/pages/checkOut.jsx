@@ -75,14 +75,14 @@ export default function CheckoutPage (){
                         
                         <div 
                             key={index} 
-                            className="w-full lg:w-[55%] h-[150px] rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between">
+                            className="w-full lg:w-[55%] lg:h-[150px] pt-[22px] relative rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between">
                             
                             <h1 className="lg:hidden w-full overflow-hidden h-[20px] absolute top-[0px]">{item.name}</h1>
 
                             <div className="h-full flex flex-col">
                             <img 
                                 src={item.image} 
-                                className="h-full aspect-square object-cover"
+                                className="h-[80px] lg:h-full aspect-square object-cover"
                             />
                                {
                                     item.labelledPrice > item.price && 
@@ -94,7 +94,7 @@ export default function CheckoutPage (){
                                         LKR. {item.price.toFixed(2)}
                                     </h2>
                             </div>
-                            <div className="flex flex-col justify-center pl-4 w-[300px]">
+                            <div className="hidden lg:flex flex-col justify-center pl-4 w-[300px]">
                                 <h1 className="text-2xl font-semibold relative hover:[&_.tooltip]:opacity-100">
                                     <span className="opacity-0 tooltip italic text-sm absolute bottom-[-25px] bg-accent text-white px-2 rounded-2xl">
                                         {item.name}
@@ -116,7 +116,7 @@ export default function CheckoutPage (){
                                 <h3 className="text-lg mt-2">{item.productID}</h3>
 
                             </div>
-                            <div className="h-full flex flex-row items-center gap-4">
+                            <div className="min-h-full flex flex-row items-center gap-4">
                                 <div className="h-full flex flex-col justify-center items-center">
                                     <FaCaretSquareUp
                                         onClick={
@@ -152,8 +152,8 @@ export default function CheckoutPage (){
                 }
                )
            } 
-           <div className="w-[55%] p-4 rounded-xl overflow-hidden shadow-2xl my-1 flex flex-wrap justify-between items-center">
-            <div className="flex flex-col w-[50%]">
+           <div className="lg:w-[55%] p-4 rounded-xl overflow-hidden shadow-2xl my-1 flex flex-wrap justify-between items-center">
+            <div className="flex flex-col lg:w-[50%]">
                 <label>Name</label>
                 <input 
                     type= "text"
@@ -162,7 +162,7 @@ export default function CheckoutPage (){
                     className=" px-6 py-3 rounded border-2 border-secondary/30 focus:border-accent outline-none transition-w-[300px]"
                 />
             </div>
-             <div className="flex flex-col w-[50%]">
+             <div className="flex flex-col lg:w-[50%]">
 
                 <label>Phone</label>
                 <input
@@ -184,7 +184,7 @@ export default function CheckoutPage (){
            
 
            </div>
-           <div className="w-[55%] h-[150px] rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between items-center">
+           <div className="w-full lg:w-[55%] h-[150px] rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between items-center">
                 <button 
                     onClick={submitOrder}
                     className="self-center ml-4 px-6 py-3 rounded bg-accent text-white hover:bg-accent/80 transition">

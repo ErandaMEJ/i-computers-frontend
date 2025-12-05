@@ -5,7 +5,7 @@ export default function ProductCard(props){
     const product = props.product
 
     return (
-        <div className="w-[300px] h-[400px] shadow-2xl m-4 cursor-pointer relative hover:[&_.buttons]:opacity-100 hover:[&_.primary-image]:opacity-0">
+        <Link to={"/overview/"+product.productID} className="w-[300px] h-[400px] shadow-2xl m-4 cursor-pointer relative hover:[&_.buttons]:opacity-100 hover:[&_.primary-image]:opacity-0 ">
             <div className="w-full h-[250px] bg-red-900 relative">
                  <img 
                     src={product.images[1]} 
@@ -32,14 +32,14 @@ export default function ProductCard(props){
 
                 <div className="w-full h-[150px] bottom-0 opacity-0 absolute buttons bg-white flex flex-row gap-4 justify-center items-center transition-opacity duration-400">
                     {/* <Link to="/cart" className="w-[150px] h-[50px] border-2 font-semibold border-accent text-accent hover:bg-accent hover:text-white transition-colors duration-200 text-center flex justify-center items-center">Add to cart</Link> */}
-                    <Link 
-                        to={"/overview/"+product.productID} 
+                    <button 
+                        
                         className="w-[150px] h-[50px] border-2 font-semibold border-accent text-accent hover:bg-accent hover:text-white transition-colors duration-200 text-center flex justify-center items-center">
                         View Details
-                    </Link>
+                    </button>
                   
                 </div>
 
-        </div>
+        </Link>
     );
 }

@@ -1,26 +1,57 @@
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { GrGoogle,  } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: (response) => {
+      setIsLoading(true);
+      axios.post(import.meta.env.VITE_BACKEND_URL + "/users/google-login", {
+        token: response.access_token,
+      }).then((res)=>{
+        localStorage.setItem("token", res.data.token);
+        if (res.data.role == "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
+        toast.success("Login successful! ");
+        setIsLoading(false);
+    }).catch((err)=> {
+        console.log(err);
+    })
+        setIsLoading(false);
+    },
+    onError: () => {toast.error("Google login failed");},
+    onNonOAuthError: ()=> {toast.error("Google login failed");}
+  })
 
   async function login() {
     console.log("Logging button clicked");
     console.log("Email:", email);
     console.log("Password:", password);
+    setIsLoading(true);
 
     try {
-      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login", {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login", 
+      {
         email: email,
         password: password,
-      });
+      }
+    );
 
-      console.log(res);
+      console.log(res.data.token);
+
       localStorage.setItem("token", res.data.token);
+      console.log()
 
       if (res.data.role == "admin") {
         navigate("/admin");
@@ -29,11 +60,14 @@ export default function LoginPage() {
       }
 
       toast.success("Login successful! Welcome back.");
+      setIsLoading(false);
       
     } catch (err) {
+      
       toast.error("Login failed! Please check your credentials and try again.");
       console.log("Error during login:");
       console.log(err);
+      setIsLoading(false);
     }
   }
 
@@ -91,10 +125,19 @@ export default function LoginPage() {
 
             <button
               onClick={login}
-              className="w-full h-[50px] bg-accent text-primary text-[20px] font-semibold rounded-lg border-2 border-accent 
+              className="w-full h-[50px] mb-[20px] bg-accent text-primary text-[20px] font-semibold rounded-lg border-2 border-accent 
                          hover:bg-transparent hover:text-accent transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(46,140,214,0.4)]"
             >
               Login
+            </button>
+
+            <button
+              onClick={() => googleLogin()}
+              
+              className="w-full h-[50px] bg-accent text-primary text-[20px] font-semibold rounded-lg border-2 border-accent 
+                         hover:bg-transparent hover:text-accent transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(46,140,214,0.4)]"
+            >
+              Login with <GrGoogle className="inline ml-2 mb-1"/>
             </button>
 
             <p className="text-primary mt-6 text-[16px]">
@@ -108,6 +151,7 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
+            {isLoading && <Loader />} 
       </div>
     </div>
   );
