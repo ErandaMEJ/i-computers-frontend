@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { PiPlus } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/loader";

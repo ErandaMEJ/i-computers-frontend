@@ -4,6 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { GrGoogle,  } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
+import Loader from "../components/loader";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -116,7 +117,7 @@ export default function LoginPage() {
             <p className="text-primary text-sm w-full text-right mb-[15px]">
               Forgot your password?{" "}
               <Link
-                to="/reset-password"
+                to="/forgot-password"
                 className="text-gold underline hover:text-accent italic transition-colors"
               >
                 Reset

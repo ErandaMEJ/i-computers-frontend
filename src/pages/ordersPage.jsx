@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Loader from "../../components/loader";
-import ViewOrderInfo from "../../components/viewOrderInfo";
+import Loader from "../components/loader";
+import ViewOrderInfoCustomer from "../components/viewOrderInfoCustomer";
 
 
-export default function AdminOrdersPage() {
+
+
+export default function ordersPage() {
   const [orders, setOrders] = useState([]);
   const [loaded, setLoaded] = useState(false);
  
@@ -69,7 +71,7 @@ export default function AdminOrdersPage() {
                 <td className="py-3 px-4">{new Date(order.date).toLocaleDateString()}</td>
                 <td className="py-3 px-4">{order.status}</td>
                 <td className="py-3 px-4">LKR. {order.total.toFixed(2)}</td>
-                <td className="py-3 px-4"><ViewOrderInfo order ={order}/></td>                
+                <td className="py-3 px-4"><ViewOrderInfoCustomer order ={order}/></td>                
                 
                 
               </tr>
