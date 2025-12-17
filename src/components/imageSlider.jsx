@@ -1,27 +1,30 @@
-import { useState } from "react"
+import { useState } from "react";
 
-export default function imageSlider(props) {
-    const images = props.images
-    const [activeIndex, setActiveIndex] = useState(0)
-
-    return (
-        <div className="w-full flex flex-col items-center">
-            <img src={images[activeIndex]} className="w-=[80%] h-[500px] object-contain"/>
-            <div className="w-full h-[100px] flex flex-row justify-center gap-4">
-                {
-                    images.map((image, index) => {
-                        return(
-                            <img src={images[index]} className={"w-[90px] h-[90px] object-cover rounded-lg "+((activeIndex==index)?"border-2 border-secondary":"")} 
-                            onClick={
-                                ()=>{
-                                    setActiveIndex(index)
-                                }
-                            }/>
-                        )
-                    })
-                }
-
-            </div>
-        </div>
-    )
+export default function ImageSlider(props) {
+  const images = props.images;
+  const [currentImage, setCurrentImage] = useState(0);
+  return (
+    <div className="w-full lg:w-[500px] h-full flex flex-col justify-center  items-center">
+      <img
+        src={images[currentImage]}
+        className="w-full aspect-square object-contain"
+      />
+      <div className="w-full h-[100px] flex flex-row justify-center items-center gap-4">
+        {images.map((image, index) => {
+          return (
+            <img
+              key={index}
+              src={image}
+              className={`w-[80px] h-[80px] object-cover rounded-lg cursor-pointer ${
+                currentImage == index && "border-2 border-accent"
+              }`}
+              onClick={() => {
+                setCurrentImage(index);
+              }}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
 }
