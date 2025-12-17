@@ -73,7 +73,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full h-screen bg-[url('bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative overflow-hidden">
+    <div className="w-full h-screen bg-[url('/bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative overflow-hidden">
       {/* Overlay gradient for better contrast */}
       <div className="absolute inset-0 bg-secondary/60 backdrop-blur-sm"></div>
 
