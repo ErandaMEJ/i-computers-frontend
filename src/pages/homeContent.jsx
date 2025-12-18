@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 export default function Home() {
   const slogans = useMemo(
     () => [
-      "Powering your next upgrade.",
+      "Your one-stop solution for all your computing needs.",
       "Gaming rigs. Workstations. Everyday PCs.",
-      "Best performance. Best value. Local support.",
+      "Best performance. Best value. Local support 24/7.",
       "Build it. Fix it. Boost it — Eranda Computers.",
     ],
     []
@@ -44,7 +44,7 @@ export default function Home() {
 
           {/* Title */}
           <h1 className="max-w-3xl text-balance text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Eranda Computers
+            Eranda Technologies
             <span className="block text-white/80">
               Modern PCs, parts, and expert support.
             </span>
