@@ -11,8 +11,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
   const googleLogin = useGoogleLogin({
+
     onSuccess: (response) => {
       setIsLoading(true);
       axios.post(import.meta.env.VITE_BACKEND_URL + "/users/google-login", {
