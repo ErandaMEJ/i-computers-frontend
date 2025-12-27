@@ -29,8 +29,8 @@ export default function Contact() {
 
             <ul className="space-y-3 text-sm">
               <li><strong>📍 Location:</strong> Sri Lanka</li>
-              <li><strong>📞 Phone:</strong> +94 XX XXX XXXX</li>
-              <li><strong>📧 Email:</strong> info@erandatech.lk</li>
+              <li><strong>📞 Phone:</strong> +94 71 123 456</li>
+              <li><strong>📧 Email:</strong> madumaleranda123@gmail.com</li>
             </ul>
           </div>
 
