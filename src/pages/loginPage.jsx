@@ -9,8 +9,8 @@ import Loader from "../components/loader";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);  
   const googleLogin = useGoogleLogin({
 
     onSuccess: (response) => {
