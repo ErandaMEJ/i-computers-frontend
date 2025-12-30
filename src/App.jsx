@@ -11,6 +11,8 @@ import ForgetPasswordPage from './pages/forgetPasswordPage';
 
 //309651160594-59496ucjsk3kehjlb3ti11v9olgqt3vu.apps.googleusercontent.com
 
+import { Analytics } from '@vercel/analytics/react';
+
 function App() {
  
   return (
@@ -18,6 +20,7 @@ function App() {
     <BrowserRouter>
         <Toaster position="top-right"/>
           <div className="w-full h-screen bg-primary text-secondary ">
+            <Analytics />
 
             <Routes>
                 <Route path="/*" element={<HomePage/>} />
