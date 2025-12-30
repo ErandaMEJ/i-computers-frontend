@@ -6,6 +6,8 @@ import CartPage from "./cart";
 import CheckoutPage from "./checkOut";
 import OrdersPage from "./ordersPage";
 import Home from "./homeContent";
+import About from "./about";
+import Contact from "./contact";
 
 
 
@@ -17,8 +19,8 @@ export default function HomePage(){
                 <Routes>
                     <Route path="/" element={<Home/>} />
                     <Route path="/products" element={<ProductPage/>} />
-                    <Route path="/about" element={<h1>About Us</h1>} />
-                    <Route path="/contact" element={<h1>Contact Us</h1>} />
+                    <Route path="/about" element={<About/>} />
+                    <Route path="/contact" element={<Contact/>} />
                     <Route path="/overview/:productID" element={<ProductOverview/>}/>
                     <Route path="/cart" element={<CartPage/>} />
                     <Route path="/checkout" element={<CheckoutPage/>} />
