@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../components/loader";
 import AdminUsersPage from "./admin/adminUsersPage";
+import AdminProductReviews from "./admin/adminProductReviews";
+import AdminReviewsPage from "./admin/aminReviewsPage";
+
 
 
 export default function AdminPage(){
@@ -62,7 +65,8 @@ export default function AdminPage(){
                     <Route path="/add-product" element={<AdminAddProductPage/>} />
                     <Route path="/update-product"element={<AdminUpdateProductPage/>}/>
                     <Route path="/users" element={<AdminUsersPage />} />
-                    <Route path="/reviews" element={<h1>Reviews</h1>} />
+                    <Route path="/reviews/:productID" element={<AdminProductReviews />} />
+                    <Route path="/reviews" element={<AdminReviewsPage />} />
                 </Routes>                
             </div>
             </>:

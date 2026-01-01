@@ -3,17 +3,21 @@ import Loader from "../components/loader";
 import axios from "axios";
 import ProductCard from "../components/productCard";
 
+
 export default function ProductPage() {
 
+   
     const [products, setProducts] = useState([]);
     const [loaded, setLoaded] = useState(false);
+
+    
 
     useEffect(() => {
 
         if(!loaded){
-            axios
-      .get(import.meta.env.VITE_BACKEND_URL + "/products")
-      .then((response) => {
+            
+        axios.get(import.meta.env.VITE_BACKEND_URL + "/products")
+        .then((response) => {
         console.log(response.data);
         setProducts(response.data);
         setLoaded(true);

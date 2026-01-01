@@ -6,11 +6,14 @@ import { GrGoogle,  } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/loader";
 
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);  
+  const [isLoading, setIsLoading] = useState(false); 
+  
+
   
   const googleLogin = useGoogleLogin({
 

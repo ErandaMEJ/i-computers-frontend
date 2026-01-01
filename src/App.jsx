@@ -19,8 +19,7 @@ function App() {
     <GoogleOAuthProvider clientId="309651160594-59496ucjsk3kehjlb3ti11v9olgqt3vu.apps.googleusercontent.com">
     <BrowserRouter>
         <Toaster position="top-right"/>
-          <div className="w-full h-screen bg-primary text-secondary ">
-            <Analytics />
+          <div className="w-full h-screen bg-primary text-secondary ">            
 
             <Routes>
                 <Route path="/*" element={<HomePage/>} />
@@ -29,6 +28,7 @@ function App() {
                 <Route path="/admin/*" element={<AdminPage/>}/>                
                 <Route path="/forgot-password" element= {<ForgetPasswordPage/>}/>
             </Routes>
+            <Analytics />
 
           </div>
     </BrowserRouter>

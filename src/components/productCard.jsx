@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import StarRating from "./starRating";
 
 export default function ProductCard(props){
 
@@ -17,6 +18,12 @@ export default function ProductCard(props){
 
                 <div className="w-full h-[150px] p-2 flex flex-col justify-evenly">
                     <h1 className="text-center text-lg ">{product.name}</h1>
+                    <div className="flex items-center justify-between mt-2">
+                        <StarRating value={product?.rating ?? 0} showValue={false} size={14} />
+                        <span className="text-xs text-secondary/60">
+                            ({product?.numReviews ?? 0})
+                        </span>
+                        </div>
                     <div className="w-full flex flex-col items-center">
                         {
                             product.labelledPrice > product.price &&
@@ -27,6 +34,11 @@ export default function ProductCard(props){
                         <h2 className="text-secondary text-2xl">
                             LKR. {product.price.toFixed(2)}
                         </h2>
+                            {/* ⭐ Rating + numReviews */}
+                            <p className="text-xs text-gray-500 mt-1">
+                                Rating: {(product.rating ?? 0).toFixed(1)} (
+                                {product.numReviews ?? 0})
+                            </p>
                     </div>
                 </div>
 
