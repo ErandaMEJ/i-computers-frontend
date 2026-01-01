@@ -47,7 +47,7 @@ export default function AdminPage(){
             <div className="w-[300px] bg-accent h-full">
                 <div className="w-full h-[100px] flex items-center text-secondary gap-[30px] ">
                     <img src="/logo.png" className="h-full" alt="logo"/>
-                    <h1 className="text-2xl">Admin</h1>
+                    <h1 className="text-2xl font-bold">Admin</h1>
                 </div>
 
                 <div className="w-full h-[400px] text-secondary text-2xl flex flex-col pl-[20px] pt-[20px] ">
@@ -65,8 +65,8 @@ export default function AdminPage(){
                     <Route path="/add-product" element={<AdminAddProductPage/>} />
                     <Route path="/update-product"element={<AdminUpdateProductPage/>}/>
                     <Route path="/users" element={<AdminUsersPage />} />
-                    <Route path="/reviews/:productID" element={<AdminProductReviews />} />
                     <Route path="/reviews" element={<AdminReviewsPage />} />
+                    <Route path="/reviews/:productID" element={<AdminProductReviews />} />
                 </Routes>                
             </div>
             </>:
