@@ -48,7 +48,7 @@ export default function Header() {
         </div>
       </Link>
 
-      {/* ---------------- Sidebar Overlay ---------------- */}
+      {/* --------------- Sidebar Overlay ---------------- */}
       {sideBarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-20 lg:hidden"
