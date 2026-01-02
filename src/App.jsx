@@ -8,6 +8,7 @@ import AdminPage from './pages/adminPage';
 import { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ForgetPasswordPage from './pages/forgetPasswordPage';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 //309651160594-59496ucjsk3kehjlb3ti11v9olgqt3vu.apps.googleusercontent.com
 
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/forgot-password" element= {<ForgetPasswordPage/>}/>
             </Routes>
             <Analytics />
+            <SpeedInsights />
 
           </div>
     </BrowserRouter>
