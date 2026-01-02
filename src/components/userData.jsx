@@ -24,8 +24,8 @@ export default function UserData() {
         <>
             {
                 user ?
-                    <div className="w-[150px] flex flex-row">
-                        <img src={user.image} refererPolicy="no-referrer" className="w-[50px] rounded-full h-[50px]" />
+                    <div className="w-[170px] flex flex-row">
+                        <img src={user.image} refererPolicy="no-referrer" className="w-[48px] rounded-full h-[48px]" />
                         <select className="bg-transparent outline-none ml-2  text-white" value={selectedOption}
                             onChange={
                                 (e) => {
@@ -45,9 +45,9 @@ export default function UserData() {
 
                         </select>
                     </div> :
-                    <div className="w-[150px] flex flex-row">
-                        <Link to="/login" className="mx-2 px-4 py-2 bg-white text-black rounded-full hover:bg-black hover:text-white transition-colors duration-300">Login</Link>
-                        <Link to="/register" className="mx-2 px-4 py-2 bg-white rounded-full text-black hover:bg-black hover:text-white transition-colors duration-300"> Register</Link>
+                    <div className="w-[175px] flex flex-row ">
+                        <Link to="/login" className="mx-1 px-4 py-2 bg-white text-black rounded-full hover:bg-black hover:text-white transition-colors duration-300">Login</Link>
+                        <Link to="/register" className="mx-1 px-4 py-2 bg-white rounded-full text-black hover:bg-black hover:text-white transition-colors duration-300"> Register</Link>
                     </div>
 
             }
