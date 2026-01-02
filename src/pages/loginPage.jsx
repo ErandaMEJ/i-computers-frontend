@@ -2,163 +2,154 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { GrGoogle,  } from "react-icons/gr";
+import { GrGoogle } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/loader";
-
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false); 
-  
 
-  
+  const inputCls =
+    "w-full h-12 rounded-xl bg-white/10 text-white placeholder:text-white/50 px-4 outline-none border border-white/15 focus:border-accent focus:ring-2 focus:ring-accent/20 transition";
+  const btnCls =
+    "w-full h-12 rounded-xl font-semibold border border-accent bg-accent text-primary hover:bg-accent/85 transition shadow-sm active:scale-[0.99]";
+  const btnGhost =
+    "w-full h-12 rounded-xl font-semibold border border-white/15 bg-white/10 text-white hover:bg-white/15 transition";
+
+  const goAfterLogin = (role) => navigate(role === "admin" ? "/admin" : "/");
+
   const googleLogin = useGoogleLogin({
-
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       setIsLoading(true);
-      axios.post(import.meta.env.VITE_BACKEND_URL + "/users/google-login", {
-        token: response.access_token,
-      }).then((res)=>{
+      try {
+        const res = await axios.post(
+          import.meta.env.VITE_BACKEND_URL + "/users/google-login",
+          { token: response.access_token }
+        );
         localStorage.setItem("token", res.data.token);
-        if (res.data.role == "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/");
-        }
-        toast.success("Login successful! ");
-        setIsLoading(false);
-    }).catch((err)=> {
+        toast.success("Login successful!");
+        goAfterLogin(res.data.role);
+      } catch (err) {
         console.log(err);
-    })
+        toast.error("Google login failed");
+      } finally {
         setIsLoading(false);
+      }
     },
-    onError: () => {toast.error("Google login failed");},
-    onNonOAuthError: ()=> {toast.error("Google login failed");}
-  })
+    onError: () => toast.error("Google login failed"),
+    onNonOAuthError: () => toast.error("Google login failed"),
+  });
 
   async function login() {
-    console.log("Logging button clicked");
-    console.log("Email:", email);
-    console.log("Password:", password);
     setIsLoading(true);
-
     try {
-      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login", 
-      {
-        email: email,
-        password: password,
-      }
-    );
-
-      console.log(res.data.token);
-
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/login", {
+        email,
+        password,
+      });
       localStorage.setItem("token", res.data.token);
-      console.log()
-
-      if (res.data.role == "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
-
       toast.success("Login successful! Welcome back.");
-      setIsLoading(false);
-      
+      goAfterLogin(res.data.role);
     } catch (err) {
-      
-      toast.error("Login failed! Please check your credentials and try again.");
-      console.log("Error during login:");
       console.log(err);
+      toast.error("Login failed! Please check your credentials.");
+    } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <div className="w-full h-screen bg-[url('/bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative overflow-hidden">
-      {/* Overlay gradient for better contrast */}
-      <div className="absolute inset-0 bg-secondary/60 backdrop-blur-sm"></div>
+    <div className="min-h-screen w-full bg-[url('/bg.jpg')] bg-cover bg-center relative">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
-      <div className="relative z-10 flex w-full h-full">
-        {/* Left side */}
-        <div className="w-1/2 flex flex-col justify-center items-center p-10">
-          <img 
-            onClick={() => window.location.href = "/"}
+      <div className="relative z-10 min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
+        {/* Left (desktop only) */}
+        <div className="hidden lg:flex flex-col justify-center px-16">
+          <img
+            onClick={() => (window.location.href = "/")}
             src="/logo.png"
             alt="logo"
-            className="w-[220px] mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+            className="w-56 cursor-pointer"
           />
-          <h1 className="text-[48px] font-bold text-gold text-center leading-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+          <h1 className="mt-6 text-5xl font-bold text-gold leading-tight">
             Powering Your Digital World
           </h1>
-          <p className="text-[20px] text-primary italic mt-4 text-center max-w-[400px] leading-relaxed">
+          <p className="mt-4 text-white/80 text-lg max-w-md">
             Best computers, parts, and tech support across Sri Lanka.
           </p>
         </div>
 
-        {/* Right side - login box */}
-        <div className="w-1/2 flex justify-center items-center">
-          <div className="w-[420px] h-[600px] bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-8 flex flex-col items-center transition-all duration-300 ">
-            <h1 className="text-[42px] font-bold mb-6 text-primary tracking-wide">
-              Login
-            </h1>
-
-            <input
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              placeholder="Enter your email"
-              className="w-full h-[50px] mb-[20px] rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-            />
-
-            <input
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              placeholder="Enter your password"
-              className="w-full h-[50px] mb-3 rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-            />
-
-            <p className="text-primary text-sm w-full text-right mb-[15px]">
-              Forgot your password?{" "}
-              <Link
-                to="/forgot-password"
-                className="text-gold underline hover:text-accent italic transition-colors"
-              >
-                Reset
-              </Link>
+        {/* Right */}
+        <div className="flex items-center justify-center px-4 py-10">
+          <div className="w-full max-w-md rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-7">
+            <h1 className="text-3xl font-bold text-white">Login</h1>
+            <p className="mt-1 text-sm text-white/60">
+              Welcome back. Please sign in.
             </p>
 
-            <button
-              onClick={login}
-              className="w-full h-[50px] mb-[20px] bg-accent text-primary text-[20px] font-semibold rounded-lg border-2 border-accent 
-                         hover:bg-transparent hover:text-accent transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(46,140,214,0.4)]"
+            {/* ✅ Form added: Enter key works */}
+            <form
+              className="mt-6 space-y-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!isLoading) login();
+              }}
             >
-              Login
-            </button>
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Email"
+                className={inputCls}
+              />
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Password"
+                className={inputCls}
+              />
 
-            <button
-              onClick={() => googleLogin()}
-              
-              className="w-full h-[50px] bg-accent text-primary text-[20px] font-semibold rounded-lg border-2 border-accent 
-                         hover:bg-transparent hover:text-accent transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(46,140,214,0.4)]"
-            >
-              Login with <GrGoogle className="inline ml-2 mb-1"/>
-            </button>
+              <div className="flex justify-end">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-white/70 hover:text-white underline underline-offset-4"
+                >
+                  Forgot password?
+                </Link>
+              </div>
 
-            <p className="text-primary mt-6 text-[16px]">
-              Don’t have an account?{" "}
-              <Link
-                to="/register"
-                className="text-gold underline italic hover:text-accent transition-colors"
+              <button type="submit" className={btnCls} disabled={isLoading}>
+                Login
+              </button>
+
+              <button
+                type="button"
+                onClick={() => googleLogin()}
+                className={btnGhost}
+                disabled={isLoading}
               >
-                Register
-              </Link>
-            </p>
+                <span className="inline-flex items-center justify-center gap-2">
+                  <GrGoogle /> Continue with Google
+                </span>
+              </button>
+
+              <p className="pt-3 text-sm text-white/70 text-center">
+                Don’t have an account?{" "}
+                <Link
+                  to="/register"
+                  className="text-gold hover:text-white underline underline-offset-4"
+                >
+                  Register
+                </Link>
+              </p>
+            </form>
           </div>
         </div>
-            {isLoading && <Loader />} 
       </div>
+
+      {isLoading && <Loader />}
     </div>
   );
 }

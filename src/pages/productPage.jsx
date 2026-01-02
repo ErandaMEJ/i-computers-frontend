@@ -44,7 +44,7 @@ export default function ProductPage() {
               </div>
 
               <div className="w-full sm:max-w-xl">
-                <div className="flex items-center gap-2 rounded-2xl border border-secondary/15 bg-white/5 px-3 py-2 shadow-sm">
+                <div className="flex items-center gap-2 rounded-2xl border  border-secondary/15 bg-white/5 px-3 py-2 shadow-sm">
                   <input
                     type="text"
                     placeholder="Search products..."
@@ -76,7 +76,7 @@ export default function ProductPage() {
                       }
                     }}
                   />
-                  <div className="h-9 w-9 rounded-xl bg-secondary/10 border border-secondary/10" />
+                  <div className="w-px h-6 bg-secondary/10 " />
                 </div>
               </div>
             </div>

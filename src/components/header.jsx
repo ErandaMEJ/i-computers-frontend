@@ -33,7 +33,7 @@ export default function Header() {
 
       {/* Desktop User */}
       <div className="absolute right-[90px] top-0 h-full items-center hidden lg:flex">
-        <div className="bg-white/10 border border-white/15 rounded-full px-2 py-1 flex items-center hover:bg-white/20 transition">
+        <div className="  px-2 py-1 flex items-center ">
           <UserData />
         </div>
       </div>

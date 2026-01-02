@@ -13,66 +13,77 @@ import AdminUsersPage from "./admin/adminUsersPage";
 import AdminProductReviews from "./admin/adminProductReviews";
 import AdminReviewsPage from "./admin/aminReviewsPage";
 
+export default function AdminPage() {
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token == null) {
+      window.location.href = "/";
+      return;
+    }
 
-export default function AdminPage(){
-    const [user, setUser] = useState(null)
-    
-    useEffect(()=>{
-        const token = localStorage.getItem("token")
-        if(token == null){
-            window.location.href = "/"
-            return
-        }
+    axios
+      .get(import.meta.env.VITE_BACKEND_URL + "/users/", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        if (response.data.role == "admin") setUser(response.data);
+        else window.location.href = "/";
+      })
+      .catch(() => {
+        window.location.href = "/login";
+      });
+  }, []);
 
-        axios.get(import.meta.env.VITE_BACKEND_URL + "/users/", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
+  const navItem =
+    "w-full flex items-center gap-3 h-11 px-4 rounded-xl text-secondary/90 hover:bg-white/10 hover:text-secondary transition";
 
-        } ).then((response)=>{
-            if(response.data.role == "admin"){
-                setUser(response.data)
-            }else{
-                window.location.href = "/"
-            }
-        } ).catch( ()=>{ window.location.href = "/login"
-
-        } )
-    },[])
-    return(
-        <div className="w-full h-full max-h-full  flex bg-accent">
-        {user ?
-            <>
-            <div className="w-[300px] bg-accent h-full">
-                <div className="w-full h-[100px] flex items-center text-secondary gap-[30px] ">
-                    <img src="/logo.png" className="h-full" alt="logo"/>
-                    <h1 className="text-2xl font-bold">Admin</h1>
-                </div>
-
-                <div className="w-full h-[400px] text-secondary text-2xl flex flex-col pl-[20px] pt-[20px] ">
-                    <Link to="/admin" className="w-full flex items-center h-[50px] gap-[10px]"><HiClipboardList />Orders</Link>
-                    <Link to="/admin/products" className="w-full flex items-center h-[50px] gap-[10px]"><FaBoxes />Products</Link>
-                    <Link to="/admin/users" className="w-full flex items-center h-[50px] gap-[10px]"><FaUserFriends />Users</Link>
-                    <Link to="/admin/reviews" className="w-full flex items-center h-[50px] gap-[10px]"><MdRateReview />Reviews</Link>
-                </div>
-
+  return (
+    <div className="w-full h-full flex bg-accent">
+      {user ? (
+        <>
+          {/* Sidebar */}
+          <div className="w-[300px] h-full p-4">
+            <div className="h-[72px] flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4">
+              <img onClick={() => window.location.href = "/"} src="/logo.png" className="h-12 w-12 object-contain" alt="logo" />
+              <h1 className="text-xl font-bold text-secondary">Admin Panel</h1>
             </div>
-            <div className="w-[calc(100%-300px)] h-full max-h-full border-[10px] bg-primary border-accent rounded-3xl  overflow-y-scroll ">
-                <Routes path="/">
-                    <Route path="/" element={<AdminOrdersPage/>} />
-                    <Route path="/products" element={<AdminProductPage/>} />
-                    <Route path="/add-product" element={<AdminAddProductPage/>} />
-                    <Route path="/update-product"element={<AdminUpdateProductPage/>}/>
-                    <Route path="/users" element={<AdminUsersPage />} />
-                    <Route path="/reviews" element={<AdminReviewsPage />} />
-                    <Route path="/reviews/:productID" element={<AdminProductReviews />} />
-                </Routes>                
+
+            <div className="mt-5 rounded-2xl border border-white/10 bg-white/10 p-2">
+              <Link to="/admin" className={navItem}>
+                <HiClipboardList /> Orders
+              </Link>
+              <Link to="/admin/products" className={navItem}>
+                <FaBoxes /> Products
+              </Link>
+              <Link to="/admin/users" className={navItem}>
+                <FaUserFriends /> Users
+              </Link>
+              <Link to="/admin/reviews" className={navItem}>
+                <MdRateReview /> Reviews
+              </Link>
             </div>
-            </>:
-            <Loader/>
-        }
-            
-        </div>
-    );
+          </div>
+
+          {/* Content */}
+          <div className="w-[calc(100%-300px)] h-full p-4">
+            <div className="w-full h-full rounded-3xl border border-secondary/10 bg-primary shadow-xl overflow-y-auto">
+              <Routes path="/">
+                <Route path="/" element={<AdminOrdersPage />} />
+                <Route path="/products" element={<AdminProductPage />} />
+                <Route path="/add-product" element={<AdminAddProductPage />} />
+                <Route path="/update-product" element={<AdminUpdateProductPage />} />
+                <Route path="/users" element={<AdminUsersPage />} />
+                <Route path="/reviews" element={<AdminReviewsPage />} />
+                <Route path="/reviews/:productID" element={<AdminProductReviews />} />
+              </Routes>
+            </div>
+          </div>
+        </>
+      ) : (
+        <Loader />
+      )}
+    </div>
+  );
 }
