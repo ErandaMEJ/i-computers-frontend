@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { addToCart, getCart, getCartTotal } from "../utils/cart";
-import { FaCaretSquareUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function CartPage() {
@@ -91,30 +90,37 @@ export default function CartPage() {
 
                     {/* Quantity + subtotal */}
                     <div className="mt-4 flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex flex-col items-center justify-center">
-                          <FaCaretSquareUp
-                            onClick={() => {
-                              addToCart(item, 1);
-                              const newCart = getCart();
-                              setCart(newCart);
-                            }}
-                            className="text-2xl cursor-pointer hover:text-secondary/70 transition"
-                          />
-                          <span className="text-sm sm:text-base font-semibold text-secondary">
-                            {item.quantity}
-                          </span>
-                          <FaCaretSquareUp
-                            onClick={() => {
-                              addToCart(item, -1);
-                              const newCart = getCart();
-                              setCart(newCart);
-                            }}
-                            className="rotate-180 text-2xl cursor-pointer hover:text-secondary/70 transition"
-                          />
+                      {/* ✅ +/- stepper */}
+                      <div className="inline-flex items-center rounded-2xl border border-secondary/15 bg-primary/40 overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            addToCart(item, -1);
+                            const newCart = getCart();
+                            setCart(newCart);
+                          }}
+                          className="w-11 h-11 flex items-center justify-center text-xl font-bold text-secondary hover:bg-white/10 transition select-none"
+                          aria-label="Decrease quantity"
+                        >
+                          −
+                        </button>
+
+                        <div className="min-w-[52px] h-11 flex items-center justify-center text-sm font-semibold text-secondary border-x border-secondary/15">
+                          {item.quantity}
                         </div>
 
-                        <span className="text-xs text-secondary/60">Qty</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            addToCart(item, 1);
+                            const newCart = getCart();
+                            setCart(newCart);
+                          }}
+                          className="w-11 h-11 flex items-center justify-center text-xl font-bold text-secondary hover:bg-white/10 transition select-none"
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
                       </div>
 
                       <div className="text-right">

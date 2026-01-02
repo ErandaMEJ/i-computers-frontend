@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaCaretSquareUp } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function CheckoutPage() {
@@ -33,7 +32,6 @@ export default function CheckoutPage() {
       .get(import.meta.env.VITE_BACKEND_URL + "/products")
       .then((res) => {
         const list = Array.isArray(res.data) ? res.data : [];
-        // pick first 6 as "trending" (you can change this)
         setTrending(list.slice(0, 6));
         setTrendingStatus("success");
       })
@@ -42,7 +40,7 @@ export default function CheckoutPage() {
       });
   }, [isEmptyCart, trendingStatus]);
 
-  // ✅ Empty cart state (when user removes all items)
+  // ✅ Empty cart state
   if (isEmptyCart) {
     return (
       <div className="w-full min-h-[calc(100vh-68px)] bg-primary">
@@ -72,7 +70,7 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* ✅ Trending products mini section */}
+          {/* Trending products mini section */}
           <div className="mt-10">
             <div className="flex items-end justify-between gap-4">
               <div>
@@ -164,7 +162,6 @@ export default function CheckoutPage() {
     }
 
     const orderItems = [];
-
     cart.forEach((item) => {
       orderItems.push({
         productID: item.productID,
@@ -182,9 +179,7 @@ export default function CheckoutPage() {
           items: orderItems,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       )
       .then(() => {
@@ -258,35 +253,41 @@ export default function CheckoutPage() {
                       </div>
                     </div>
 
-                    {/* Quantity controls + Line total */}
+                    {/* ✅ +/- Stepper + Line total */}
                     <div className="mt-4 flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex flex-col items-center justify-center">
-                          <FaCaretSquareUp
-                            onClick={() => {
-                              const copiedCart = [...cart];
-                              copiedCart[index].quantity += 1;
-                              setCart(copiedCart);
-                            }}
-                            className="text-2xl cursor-pointer hover:text-secondary/70 transition"
-                          />
-                          <span className="text-sm sm:text-base font-semibold text-secondary">
-                            {item.quantity}
-                          </span>
-                          <FaCaretSquareUp
-                            onClick={() => {
-                              const copiedCart = [...cart];
-                              copiedCart[index].quantity -= 1;
-                              if (copiedCart[index].quantity < 1) {
-                                copiedCart.splice(index, 1);
-                              }
-                              setCart(copiedCart);
-                            }}
-                            className="rotate-180 text-2xl cursor-pointer hover:text-secondary/70 transition"
-                          />
+                      <div className="inline-flex items-center rounded-2xl border border-secondary/15 bg-primary/40 overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const copiedCart = [...cart];
+                            copiedCart[index].quantity -= 1;
+                            if (copiedCart[index].quantity < 1) {
+                              copiedCart.splice(index, 1);
+                            }
+                            setCart(copiedCart);
+                          }}
+                          className="w-11 h-11 flex items-center justify-center text-xl font-bold text-secondary hover:bg-white/10 transition select-none"
+                          aria-label="Decrease quantity"
+                        >
+                          −
+                        </button>
+
+                        <div className="min-w-[52px] h-11 flex items-center justify-center text-sm font-semibold text-secondary border-x border-secondary/15">
+                          {item.quantity}
                         </div>
 
-                        <span className="text-xs text-secondary/60">Qty</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const copiedCart = [...cart];
+                            copiedCart[index].quantity += 1;
+                            setCart(copiedCart);
+                          }}
+                          className="w-11 h-11 flex items-center justify-center text-xl font-bold text-secondary hover:bg-white/10 transition select-none"
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
                       </div>
 
                       <div className="text-right">
