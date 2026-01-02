@@ -124,7 +124,7 @@ export default function Header() {
 
             {/* User card */}
             <div className="mt-6 rounded-2xl border border-black/10 bg-white p-3 shadow-sm">
-              <p className="text-xs font-semibold text-secondary/50 uppercase tracking-wide px-2">
+              <p className="text-xs font-semibold  text-secondary/50 uppercase tracking-wide px-2">
                 Account
               </p>
               <div className="mt-2 flex justify-center">

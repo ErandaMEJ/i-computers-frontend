@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/loader";
 
 export default function RegisterPage() {
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,67 +15,42 @@ export default function RegisterPage() {
   const navigate = useNavigate();
 
   async function register() {
-    
-    if (firstName.trim()==""){
-        toast.error("First name is required.");
-        return;
-    }
-    if (lastName.trim()==""){
-        toast.error("Last name is required.");
-        return;
-    }
-    if (email.trim() == "") {
-      toast.error("Email is required.");
-      return;
-    }
-    if (password.trim() == "") {
-      toast.error("Password is required.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
-      return;
-    }
-    if (password != confirmPassword) {
-      toast.error("Passwords do not match.");
-      return;
-    }
+    if (firstName.trim() == "") return toast.error("First name is required.");
+    if (lastName.trim() == "") return toast.error("Last name is required.");
+    if (email.trim() == "") return toast.error("Email is required.");
+    if (password.trim() == "") return toast.error("Password is required.");
+    if (password !== confirmPassword) return toast.error("Passwords do not match.");
+    if (password != confirmPassword) return toast.error("Passwords do not match.");
 
     setIsLoading(true);
-
     try {
-      await axios.post(
-        import.meta.env.VITE_BACKEND_URL + "/users/", 
-      {
+      await axios.post(import.meta.env.VITE_BACKEND_URL + "/users/", {
         email: email.trim(),
         password: password.trim(),
         firstName: firstName.trim(),
         lastName: lastName.trim(),
-      }
-    );
-        console.log();
-        navigate("/login");
-        
-      
+      });
 
+      navigate("/login");
       toast.success("Registration successful! Welcome to I computers.");
       setIsLoading(false);
-      
     } catch (err) {
-      toast.error("Registration failed! Please check your data and try again.");      
+      toast.error("Registration failed! Please check your data and try again.");
       console.log(err);
       setIsLoading(false);
     }
   }
 
-  return (
-    <div className="w-full h-screen bg-[url('bg.jpg')] bg-center bg-cover bg-no-repeat flex items-center justify-center relative overflow-hidden">
-      {/* Overlay gradient for better contrast */}
-      <div className="absolute inset-0 bg-secondary/60 backdrop-blur-sm"></div>
+  const inputCls =
+    "w-full h-12 rounded-xl bg-white/10 text-white placeholder:text-white/50 px-4 outline-none border border-white/15 focus:border-accent focus:ring-2 focus:ring-accent/20 transition";
 
-      <div className="relative z-10 flex w-full h-full">
-        {/* Left side */}
-        <div className="w-1/2 flex flex-col justify-center items-center p-10">
+  return (
+    <div className="min-h-screen w-full bg-[url('/bg.jpg')] bg-center bg-cover bg-no-repeat relative">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+      <div className="relative z-10 min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
+        {/* Left side (desktop only) - unchanged */}
+        <div className="hidden lg:flex flex-col justify-center items-center p-10">
           <img
             src="/logo.png"
             alt="logo"
@@ -90,69 +64,80 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Right side - login box */}
-        <div className="w-1/2 flex justify-center items-center">
-          <div className="w-[420px] h-[600px] bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-8 flex flex-col items-center transition-all duration-300 ">
-            <h1 className="text-[20px] font-semibold mb-[20px] text-primary tracking-wide">
+        {/* Right side (mobile optimized + logo shown) */}
+        <div className="flex justify-center items-center px-4 py-10">
+          <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-7">
+            {/* ✅ Mobile logo */}
+            <div className="lg:hidden flex justify-center mb-4">
+              <img
+                onClick={() => (window.location.href = "/")}
+                src="/logo.png"
+                alt="logo"
+                className="w-28 cursor-pointer"
+              />
+            </div>
+
+            <h1 className="text-3xl font-bold text-white text-center lg:text-left">
               Register
             </h1>
-
-            <input
-              onChange={(e) => setFirstName(e.target.value)}
-              type="text"
-              placeholder="Enter your first name"
-              className="w-full h-[50px] mb-[20px] rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-            />
-
-            <input
-              onChange={(e) => setLastName(e.target.value)}
-              type="text"
-              placeholder="Enter your last name"
-              className="w-full h-[50px] mb-[20px] rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-            />
-
-            <input
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              placeholder="Enter your email"
-              className="w-full h-[50px] mb-[20px] rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-            />
-
-            <input
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              placeholder="Enter your password"
-              className="w-full h-[50px] mb-[20px] rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-            />
-
-            <input
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              type="password"
-              placeholder="Confirm your password"
-              className="w-full h-[50px] mb-[20px] rounded-lg bg-white/20 text-primary placeholder:text-gray-300 p-4 text-[18px] border border-accent focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-            />              
-            
-            <button
-              onClick={register}
-              className="w-full h-[50px] bg-accent text-primary text-[20px] font-semibold rounded-lg border-2 border-accent 
-                         hover:bg-transparent hover:text-accent transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(46,140,214,0.4)]"
-            >
-              Register Now
-            </button>
-
-            <p className="text-primary mt-6 text-[16px]">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="text-gold underline italic hover:text-accent transition-colors"
-              >
-                Login
-              </Link>
+            <p className="mt-1 text-sm text-white/60 text-center lg:text-left">
+              Create your account in a few seconds.
             </p>
+
+            <div className="mt-6 space-y-3">
+              <input
+                onChange={(e) => setFirstName(e.target.value)}
+                type="text"
+                placeholder="First name"
+                className={inputCls}
+              />
+              <input
+                onChange={(e) => setLastName(e.target.value)}
+                type="text"
+                placeholder="Last name"
+                className={inputCls}
+              />
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Email"
+                className={inputCls}
+              />
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Password"
+                className={inputCls}
+              />
+              <input
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                type="password"
+                placeholder="Confirm password"
+                className={inputCls}
+              />
+
+              <button
+                onClick={register}
+                className="w-full h-12 rounded-xl bg-accent text-primary font-semibold hover:bg-accent/85 transition shadow-sm active:scale-[0.99]"
+              >
+                Register Now
+              </button>
+
+              <p className="pt-2 text-sm text-white/70 text-center">
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="text-gold hover:text-white underline underline-offset-4"
+                >
+                  Login
+                </Link>
+              </p>
+            </div>
           </div>
-        </div> 
-            {isLoading && <Loader />}           
-      </div>        
+        </div>
+      </div>
+
+      {isLoading && <Loader />}
     </div>
   );
 }

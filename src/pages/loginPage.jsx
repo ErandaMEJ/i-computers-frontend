@@ -66,7 +66,7 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
       <div className="relative z-10 min-h-screen w-full grid grid-cols-1 lg:grid-cols-2">
-        {/* Left (desktop only) */}
+        {/* Left (desktop only) - unchanged */}
         <div className="hidden lg:flex flex-col justify-center px-16">
           <img
             onClick={() => (window.location.href = "/")}
@@ -82,15 +82,26 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Right */}
+        {/* Right (mobile optimized) */}
         <div className="flex items-center justify-center px-4 py-10">
           <div className="w-full max-w-md rounded-3xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-2xl p-7">
-            <h1 className="text-3xl font-bold text-white">Login</h1>
-            <p className="mt-1 text-sm text-white/60">
+            {/* ✅ Mobile logo (shows only on mobile) */}
+            <div className="lg:hidden flex justify-center mb-4">
+              <img
+                onClick={() => (window.location.href = "/")}
+                src="/logo.png"
+                alt="logo"
+                className="w-28 cursor-pointer"
+              />
+            </div>
+
+            <h1 className="text-3xl font-bold text-white text-center lg:text-left">
+              Login
+            </h1>
+            <p className="mt-1 text-sm text-white/60 text-center lg:text-left">
               Welcome back. Please sign in.
             </p>
 
-            {/* ✅ Form added: Enter key works */}
             <form
               className="mt-6 space-y-3"
               onSubmit={(e) => {
