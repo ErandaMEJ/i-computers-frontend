@@ -84,7 +84,8 @@ export default function LoginPage() {
       <div className="relative z-10 flex w-full h-full">
         {/* Left side */}
         <div className="w-1/2 flex flex-col justify-center items-center p-10">
-          <img
+          <img 
+            onClick={() => window.location.href = "/"}
             src="/logo.png"
             alt="logo"
             className="w-[220px] mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"

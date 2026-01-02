@@ -12,12 +12,33 @@ function formatDate(iso) {
   }
 }
 
+function emailToDisplayName(email) {
+  if (!email) return "";
+
+  const localPart = String(email).split("@")[0] || "";
+
+  const cleaned = localPart
+    .replace(/[._-]+/g, " ") // "." "_" "-" -> space
+    .replace(/\d+/g, "") // remove numbers (123)
+    .replace(/\s+/g, " ") // collapse spaces
+    .trim();
+
+  if (!cleaned) return localPart;
+
+  // Title Case
+  return cleaned
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
 function pickDisplayName(me) {
- 
   return (
     me?.name ||
     me?.fullName ||
     me?.username ||
+    emailToDisplayName(me?.email) || // ✅ email-based display name
     me?.email ||
     ""
   );
@@ -26,49 +47,54 @@ function pickDisplayName(me) {
 export default function ReviewsSection({ product, productID, onRefresh }) {
   const approvedReviews = useMemo(() => {
     const list = product?.reviews ?? [];
-    
     return list.filter((r) => r?.isApproved);
   }, [product]);
 
   const [me, setMe] = useState(() => getCachedMe());
   const [nameLocked, setNameLocked] = useState(false);
 
+  // allow user to edit name only when they press Edit
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [accountDefaultName, setAccountDefaultName] = useState("");
+
   const [name, setName] = useState("");
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       setNameLocked(false);
+      setIsEditingName(true); // not logged-in -> editable
       return;
     }
 
-    
     const cached = getCachedMe();
     if (cached) {
       const dn = pickDisplayName(cached);
       if (dn) {
         setName(dn);
+        setAccountDefaultName(dn);
         setNameLocked(true);
+        setIsEditingName(false); // logged-in -> locked by default
       }
     }
 
-    
     fetchMe()
       .then((u) => {
         setMe(u);
         const dn = pickDisplayName(u);
         if (dn) {
           setName(dn);
+          setAccountDefaultName(dn);
           setNameLocked(true);
+          setIsEditingName(false);
         }
       })
       .catch(() => {
-        
         setNameLocked(false);
+        setIsEditingName(true);
       });
   }, []);
 
@@ -88,7 +114,7 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
 
     setSubmitting(true);
     try {
-      await api.post(`/products/${productID}/reviews`, {
+      await api.post(`/products/${encodeURIComponent(productID)}/reviews`, {
         name: name.trim(),
         rating: r,
         comment: comment.trim(),
@@ -98,32 +124,38 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
       setComment("");
       setRating(5);
 
-      
+      // logged-in users: keep name as-is
       if (!nameLocked) setName("");
 
       if (onRefresh) await onRefresh();
-
     } catch (err) {
-        console.log("Add review error:", err?.response?.data || err);
+      console.log("Add review error:", err?.response?.data || err);
 
-        toast.error(
-            err?.response?.data?.error ||  // ✅ backend error.message
-            err?.response?.data?.message ||
-            "Error adding review"
-        );
-    
-
+      toast.error(
+        err?.response?.data?.error ||
+          err?.response?.data?.message ||
+          "Error adding review"
+      );
     } finally {
       setSubmitting(false);
     }
   }
 
-  return (
-    <div className="w-full mt-10">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        <h2 className="text-2xl font-semibold text-secondary">Reviews</h2>
+  const emailValue = me?.email || "";
+  const canToggleNameEdit = Boolean(localStorage.getItem("token")); // logged-in only
 
-        <div className="flex items-center gap-3">
+  return (
+    <div className="w-full mt-2 ">
+      {/* Header */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between ml-3">
+        <div>
+          <h2 className="text-2xl font-semibold text-secondary">Reviews</h2>
+          <p className="text-sm text-secondary/50">
+            Only approved reviews are shown publicly.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 rounded-2xl border border-secondary/10 bg-white/5 px-4 py-3">
           <StarRating value={product?.rating ?? 0} />
           <span className="text-secondary/70 text-sm">
             ({product?.numReviews ?? 0} approved)
@@ -131,11 +163,14 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
         </div>
       </div>
 
-      {/* ✅ Approved list only */}
-      <div className="mt-5 grid grid-cols-1 gap-4">
+      {/* Approved reviews list */}
+      <div className="mt-6 grid grid-cols-1 gap-4">
         {approvedReviews.length === 0 ? (
-          <div className="p-4 rounded-2xl border border-gray-200 text-secondary/70 bg-white">
-            No reviews yet.
+          <div className="rounded-2xl border border-secondary/10 bg-white/5 p-6 text-secondary/70">
+            <p className="font-semibold text-secondary">No reviews yet</p>
+            <p className="mt-1 text-sm text-secondary/70">
+              Be the first to leave a review.
+            </p>
           </div>
         ) : (
           approvedReviews
@@ -144,7 +179,7 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
             .map((r) => (
               <div
                 key={r._id}
-                className="p-4 rounded-2xl border border-gray-200 bg-white"
+                className="rounded-2xl border border-secondary/10 bg-white/5 p-5 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -156,7 +191,7 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
                   <StarRating value={r.rating} showValue={false} size={14} />
                 </div>
 
-                <p className="mt-3 text-secondary/90 whitespace-pre-wrap">
+                <p className="mt-3 text-secondary/85 whitespace-pre-wrap leading-relaxed">
                   {r.comment}
                 </p>
               </div>
@@ -165,30 +200,103 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
       </div>
 
       {/* Add review */}
-      <div className="mt-8 p-5 rounded-2xl bg-white border border-gray-200">
-        <div className="flex items-start justify-between gap-4">
-          <h3 className="text-lg font-semibold text-secondary">Add a review</h3>
-
-          {me && (
-            <p className="text-xs text-secondary/60">
-              Logged in as: <span className="font-semibold">{pickDisplayName(me)}</span>
+      <div className="mt-8 rounded-2xl border border-secondary/10 bg-white/5 p-6 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-secondary">Add a review</h3>
+            <p className="text-xs text-secondary/60 mt-1">
+              Your review will be visible after admin approval.
             </p>
-          )}
+          </div>
+
+          {/* Email display */}
+          <div className="rounded-xl border border-secondary/10 bg-primary/40 px-3 py-2 text-xs text-secondary/70">
+            <p>
+              Email:{" "}
+              <span className="font-semibold text-secondary break-all">
+                {emailValue || "Not logged in"}
+              </span>
+            </p>
+          </div>
         </div>
 
-        <form onSubmit={submitReview} className="mt-4 grid grid-cols-1 gap-4">
+        <form onSubmit={submitReview} className="mt-5 grid grid-cols-1 gap-4">
+          {/* Name + Email row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              className="w-full p-3 rounded-xl border border-gray-300 outline-none disabled:bg-gray-100"
-              placeholder="Your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={60}
-              readOnly={nameLocked}
-            />
+            {/* Name with Edit toggle */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-semibold text-secondary/70">
+                  Display name
+                </label>
 
+                {canToggleNameEdit && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      className="text-[11px] font-semibold text-secondary/60 hover:text-secondary transition"
+                      onClick={() => {
+                        if (accountDefaultName) setName(accountDefaultName);
+                        setIsEditingName(false);
+                      }}
+                    >
+                      Reset
+                    </button>
+
+                    <button
+                      type="button"
+                      className="text-[11px] font-semibold text-accent hover:text-accent/80 transition"
+                      onClick={() => {
+                        setIsEditingName((v) => !v);
+                      }}
+                    >
+                      {isEditingName ? "Done" : "Edit"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <input
+                className="w-full rounded-xl border border-secondary/15 bg-primary/40 px-4 py-3 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:opacity-70"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                maxLength={60}
+                autoComplete="name"
+                readOnly={canToggleNameEdit ? !isEditingName : false}
+              />
+
+              {canToggleNameEdit && !isEditingName && (
+                <p className="mt-2 text-[11px] text-secondary/60">
+                  Name is locked. Click <span className="font-semibold">Edit</span> to change.
+                </p>
+              )}
+            </div>
+
+            {/* Email input read-only */}
+            <div>
+              <label className="block text-xs font-semibold text-secondary/70 mb-2">
+                Email
+              </label>
+              <input
+                className="w-full rounded-xl border border-secondary/15 bg-primary/30 px-4 py-3 outline-none"
+                value={emailValue}
+                placeholder="Not logged in"
+                readOnly
+              />
+              <p className="mt-2 text-[11px] text-secondary/60">
+                Email is shown from your account (read-only).
+              </p>
+            </div>
+          </div>
+
+          {/* Rating */}
+          <div>
+            <label className="block text-xs font-semibold text-secondary/70 mb-2">
+              Rating
+            </label>
             <select
-              className="w-full p-3 rounded-xl border border-gray-300 outline-none"
+              className="w-full rounded-xl border border-secondary/15 bg-primary/40 px-4 py-3 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
               value={rating}
               onChange={(e) => setRating(Number(e.target.value))}
             >
@@ -200,24 +308,37 @@ export default function ReviewsSection({ product, productID, onRefresh }) {
             </select>
           </div>
 
-          <textarea
-            className="w-full p-3 rounded-xl border border-gray-300 outline-none min-h-[110px]"
-            placeholder="Write your comment..."
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            maxLength={800}
-          />
+          {/* Comment */}
+          <div>
+            <label className="block text-xs font-semibold text-secondary/70 mb-2">
+              Comment
+            </label>
+            <textarea
+              className="w-full rounded-xl border border-secondary/15 bg-primary/40 px-4 py-3 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 min-h-[130px]"
+              placeholder="Write your comment..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              maxLength={800}
+            />
+            <div className="mt-2 flex items-center justify-between text-[11px] text-secondary/60">
+              <span>Be respectful and helpful.</span>
+              <span>{comment.length}/800</span>
+            </div>
+          </div>
 
-          <button
-            disabled={submitting}
-            className="w-full md:w-[220px] h-12 bg-secondary text-white rounded-2xl hover:bg-secondary/80 disabled:opacity-60"
-          >
-            {submitting ? "Submitting..." : "Submit Review"}
-          </button>
+          {/* Submit */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <button
+              disabled={submitting}
+              className="h-12 w-full sm:w-[220px] rounded-2xl bg-accent text-white font-semibold hover:bg-accent/90 transition disabled:opacity-60"
+            >
+              {submitting ? "Submitting..." : "Submit Review"}
+            </button>
 
-          <p className="text-xs text-secondary/60">
-            Note: Your review will be publicly visible after admin approval.
-          </p>
+            <div className="text-xs text-secondary/60">
+              By submitting, you agree that your review may be moderated.
+            </div>
+          </div>
         </form>
       </div>
     </div>

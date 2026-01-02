@@ -7,7 +7,7 @@ import { addToCart } from "../utils/cart";
 import { HiChevronRight } from "react-icons/hi";
 import ReviewsSection from "../components/reviewsSection";
 import StarRating from "../components/starRating";
-import { api } from "../utils/api"; // ✅ use shared axios instance (baseURL correct)
+import { api } from "../utils/api"; 
 
 export default function ProductOverview() {
   const navigate = useNavigate();
@@ -83,7 +83,10 @@ export default function ProductOverview() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Left: Images */}
           <div className="rounded-2xl border border-secondary/10 bg-white/5 p-3 sm:p-4 shadow-sm">
-            <ImageSlider images={safeImages} />
+            
+            <div className="w-full h-[340px] sm:h-[460px] lg:h-[620px]">
+              <ImageSlider images={safeImages} />
+            </div>
           </div>
 
           {/* Right: Details */}
@@ -92,7 +95,7 @@ export default function ProductOverview() {
               {product?.name}
             </h1>
 
-            <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
               <p className="text-sm text-secondary/60">{product?.productID}</p>
 
               <div className="flex items-center gap-2">
@@ -104,7 +107,7 @@ export default function ProductOverview() {
             </div>
 
             {/* Category + alt names */}
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-6  flex flex-wrap gap-2 ">
               {product?.category && (
                 <span className="rounded-full border border-secondary/10 bg-white/5 px-3 py-1 text-xs font-semibold text-secondary/80">
                   {product.category}
@@ -123,13 +126,13 @@ export default function ProductOverview() {
             </div>
 
             {product?.altNames?.length > 0 && (
-              <p className="mt-3 text-sm text-secondary/70">
+              <p className="mt-6 text-sm  text-secondary/70">
                 Also known as: <span className="text-secondary/85">{product.altNames.join(" • ")}</span>
               </p>
             )}
 
             {/* Description */}
-            <div className="mt-5">
+            <div className="mt-6 rounded-2xl border border-secondary/10 bg-primary/40 p-4">
               <h2 className="text-sm font-semibold text-secondary">Description</h2>
               <p className="mt-2 text-sm leading-relaxed text-secondary/80 whitespace-pre-wrap">
                 {product?.description}
@@ -191,7 +194,7 @@ export default function ProductOverview() {
             </div>
 
             {/* Tiny reassurance row */}
-            <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-secondary/60">
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-secondary/50">
               <span className="rounded-full border border-secondary/10 bg-white/5 px-3 py-1">
                 Genuine parts
               </span>

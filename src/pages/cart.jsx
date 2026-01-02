@@ -1,107 +1,161 @@
-import { useState } from "react"
-import { addToCart, getCart, getCartTotal } from "../utils/cart"
-import { FaCaretSquareUp } from "react-icons/fa"
-import { Link } from "react-router-dom"
+import { useState } from "react";
+import { addToCart, getCart, getCartTotal } from "../utils/cart";
+import { FaCaretSquareUp } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-export default function CartPage (){
-    const [cart, setCart] = useState(getCart())
-    return(
-        <div className="w-full flex flex-col items-center p-[20px]">
-           {
-               cart.map(
-                (item, index)=>{
-                    return(
-                        
-                        <div 
-                            key={index} 
-                            className="w-full lg:w-[55%] lg:h-[150px] pt-[22px] relative rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between "
-                        >
-                            <h1 className="lg:hidden w-full overflow-hidden h-[20px] absolute top-[0px]">{item.name}</h1>
+export default function CartPage() {
+  const [cart, setCart] = useState(getCart());
 
-                            <div className="h-full flex flex-col">
-                            <img src={item.image} className="h-[80px] lg:h-full aspect-square object-cover"
-                            />
-                            {
-                                    item.labelledPrice > item.price && 
-                                    <h2 className="text-sm line-through decoration-gold/70 decoration-2 mr-2">
-                                        LKR. {item.labelledPrice.toFixed(2)}
-                                    </h2>
-                            }
-                                    <h2 className="text-sm text-accent font-semibold ">
-                                        LKR. {item.price.toFixed(2)}
-                                    </h2>
-                            </div>
+  return (
+    <div className="w-full min-h-[calc(100vh-68px)] bg-primary">
+      <div className="mx-auto max-w-5xl px-4 py-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-secondary">
+              Your Cart
+            </h1>
+            <p className="text-sm text-secondary/60">
+              {cart.length} item{cart.length !== 1 ? "s" : ""} in your cart
+            </p>
+          </div>
 
-                            <div className="hidden lg:flex flex-col justify-center pl-4 w-[300px]">
-                                <h1 className="text-2xl font-semibold relative hover:[&_.tooltip]:opacity-100">
-                                    <span className="opacity-0 tooltip italic text-sm absolute bottom-[-25px] bg-accent text-white px-2 rounded-2xl">{item.name}</span>
-                                    {
-                                        item.name.length > 20 ? 
-                                        item.name.substring(0, 20)+"..." : item.name
-                                    }
-                                </h1>
-                                {
-                                    item.labelledPrice > item.price && 
-                                    <h2 className="text-lg line-through decoration-gold/70 decoration-2 mr-2">
-                                        LKR. {item.labelledPrice.toFixed(2)}
-                                    </h2>
-                                }
-                                <h2 className="text-xl text-accent font-semibold mt-2">
-                                    LKR. {item.price.toFixed(2)}
-                                </h2>
-                                <h3 className="text-lg mt-2">{item.productID}</h3>
-
-                            </div>
-                            <div className="min-h-full flex flex-row items-center gap-4">
-                                <div className="h-full flex flex-col justify-center items-center">
-                                    <FaCaretSquareUp
-                                        onClick={
-                                            ()=>{
-                                                addToCart(item, 1)
-                                                const newCart = getCart()
-                                                setCart(newCart)
-                                            }
-                                        } 
-                                    className="text-2xl cursor-pointer hover:text-secondary/70 transition" />
-                                    <span className="text-lg">{item.quantity}</span>
-                                    <FaCaretSquareUp 
-                                        onClick={
-                                            ()=>{
-                                                addToCart(item, -1)
-                                                const newCart = getCart()
-                                                setCart(newCart)
-                                            }
-                                        }
-                                    className="rotate-180 text-2xl cursor-pointer hover:text-secondary/70 transition"/>
-
-                                </div>
-                                <span className="pr-4 text-lg font-semibold w-[150px] text-right">
-                                    LKR. {(item.price * item.quantity).toFixed(2)}
-                                </span>
-
-                            </div>
-                        </div>    
-                    )
-                }
-               )
-           }
-           <div className="w-full lg:w-[55%] h-[150px] rounded-xl overflow-hidden shadow-2xl my-1 flex justify-between items-center">
-                <Link
-                    to="/checkout" className="self-center ml-4 px-6 py-3 rounded bg-accent text-white hover:bg-accent/80 transition"
-                    state={
-                        cart
-                    }>
-                       Checkout
-                </Link>
-                                
-                                <span className="pr-3 text-xl font-bold min-w-[150px] text-right">
-                                    LKR. {getCartTotal().toFixed(2)}
-                                </span>
-
-                    
-           </div>
+          <Link
+            to="/products"
+            className="inline-flex items-center justify-center h-10 px-4 rounded-xl border border-secondary/15 bg-white/5 text-sm font-semibold text-secondary hover:bg-white/10 transition w-fit"
+          >
+            Continue Shopping
+          </Link>
         </div>
-    )
+
+        {/* Empty state */}
+        {cart.length === 0 && (
+          <div className="rounded-2xl border border-secondary/10 bg-white/5 p-8 text-center shadow-sm">
+            <h2 className="text-xl font-semibold text-secondary">
+              Cart is empty
+            </h2>
+            <p className="mt-2 text-sm text-secondary/70">
+              Browse products and add items to your cart.
+            </p>
+            <Link
+              to="/products"
+              className="mt-6 inline-flex h-12 px-6 rounded-2xl bg-accent text-white font-semibold items-center justify-center hover:bg-accent/85 transition"
+            >
+              Browse Products
+            </Link>
+          </div>
+        )}
+
+        {/* Items */}
+        <div className="grid gap-4">
+          {cart.map((item, index) => {
+            return (
+              <div
+                key={index}
+                className="
+                  w-full rounded-2xl border border-secondary/10 bg-white/5
+                  shadow-sm hover:shadow-md transition overflow-hidden
+                "
+              >
+                <div className="p-4 sm:p-5 flex gap-4">
+                  {/* Image */}
+                  <img
+                    src={item.image}
+                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover border border-secondary/10 bg-white"
+                    alt={item.name}
+                  />
+
+                  {/* Details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h2 className="text-base sm:text-lg font-semibold text-secondary truncate">
+                          {item.name}
+                        </h2>
+                        <p className="text-xs sm:text-sm text-secondary/60 mt-1">
+                          {item.productID}
+                        </p>
+                      </div>
+
+                      <div className="text-right shrink-0">
+                        {item.labelledPrice > item.price && (
+                          <p className="text-xs sm:text-sm text-secondary/60 line-through decoration-gold/70 decoration-2">
+                            LKR. {item.labelledPrice.toFixed(2)}
+                          </p>
+                        )}
+                        <p className="text-sm sm:text-lg font-semibold text-accent">
+                          LKR. {item.price.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Quantity + subtotal */}
+                    <div className="mt-4 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col items-center justify-center">
+                          <FaCaretSquareUp
+                            onClick={() => {
+                              addToCart(item, 1);
+                              const newCart = getCart();
+                              setCart(newCart);
+                            }}
+                            className="text-2xl cursor-pointer hover:text-secondary/70 transition"
+                          />
+                          <span className="text-sm sm:text-base font-semibold text-secondary">
+                            {item.quantity}
+                          </span>
+                          <FaCaretSquareUp
+                            onClick={() => {
+                              addToCart(item, -1);
+                              const newCart = getCart();
+                              setCart(newCart);
+                            }}
+                            className="rotate-180 text-2xl cursor-pointer hover:text-secondary/70 transition"
+                          />
+                        </div>
+
+                        <span className="text-xs text-secondary/60">Qty</span>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-xs text-secondary/60">Subtotal</p>
+                        <p className="text-base sm:text-lg font-semibold text-secondary">
+                          LKR. {(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Footer summary */}
+        {cart.length > 0 && (
+          <div className="mt-6 rounded-2xl border border-secondary/10 bg-white/5 shadow-sm p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <p className="text-xs text-secondary/60">Total</p>
+                <p className="text-2xl font-semibold text-accent">
+                  LKR. {getCartTotal().toFixed(2)}
+                </p>
+                <p className="text-xs text-secondary/60 mt-1">
+                  Taxes / delivery (if any) may be added at checkout.
+                </p>
+              </div>
+
+              <Link
+                to="/checkout"
+                className="h-12 w-full sm:w-auto px-8 rounded-2xl bg-accent text-white font-semibold flex items-center justify-center hover:bg-accent/85 transition shadow-sm active:scale-[0.99]"
+                state={cart}
+              >
+                Checkout
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
-    
-       
