@@ -18,57 +18,42 @@ export default function AdminPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token == null) {
-      window.location.href = "/";
-      return;
-    }
+    if (token == null) { window.location.href = "/"; return; }
 
     axios
-      .get(import.meta.env.VITE_BACKEND_URL + "/users/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((response) => {
-        if (response.data.role == "admin") setUser(response.data);
-        else window.location.href = "/";
-      })
-      .catch(() => {
-        window.location.href = "/login";
-      });
+      .get(import.meta.env.VITE_BACKEND_URL + "/users/", { headers: { Authorization: `Bearer ${token}` } })
+      .then((response) => { if (response.data.role == "admin") setUser(response.data); else window.location.href = "/"; })
+      .catch(() => { window.location.href = "/login"; });
   }, []);
 
   const navItem =
-    "w-full flex items-center gap-3 h-11 px-4 rounded-xl text-secondary/90 hover:bg-white/10 hover:text-secondary transition";
+    "w-full flex items-center gap-3 h-11 px-4 rounded-2xl text-secondary/90 hover:bg-white/10 hover:text-secondary transition";
 
   return (
     <div className="w-full h-full flex bg-accent">
       {user ? (
         <>
           {/* Sidebar */}
-          <div className="w-[300px] h-full p-4">
-            <div className="h-[72px] flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4">
-              <img onClick={() => window.location.href = "/"} src="/logo.png" className="h-12 w-12 object-contain" alt="logo" />
-              <h1 className="text-xl font-bold text-secondary">Admin Panel</h1>
+          <aside className="w-[300px] h-full p-4">
+            <div className="h-[72px] flex items-center gap-3 rounded-3xl border border-white/10 bg-white/10 px-4 shadow-sm">
+              <img onClick={() => (window.location.href = "/")} src="/logo.png" className="h-12 w-12 object-contain cursor-pointer" alt="logo" />
+              <div>
+                <h1 className="text-lg font-bold text-secondary">Admin Panel</h1>
+                <p className="text-xs text-secondary/60">Manage store content</p>
+              </div>
             </div>
 
-            <div className="mt-5 rounded-2xl border border-white/10 bg-white/10 p-2">
-              <Link to="/admin" className={navItem}>
-                <HiClipboardList /> Orders
-              </Link>
-              <Link to="/admin/products" className={navItem}>
-                <FaBoxes /> Products
-              </Link>
-              <Link to="/admin/users" className={navItem}>
-                <FaUserFriends /> Users
-              </Link>
-              <Link to="/admin/reviews" className={navItem}>
-                <MdRateReview /> Reviews
-              </Link>
-            </div>
-          </div>
+            <nav className="mt-5 rounded-3xl border border-white/10 bg-white/10 p-2 shadow-sm">
+              <Link to="/admin" className={navItem}><HiClipboardList /> Orders</Link>
+              <Link to="/admin/products" className={navItem}><FaBoxes /> Products</Link>
+              <Link to="/admin/users" className={navItem}><FaUserFriends /> Users</Link>
+              <Link to="/admin/reviews" className={navItem}><MdRateReview /> Reviews</Link>
+            </nav>
+          </aside>
 
           {/* Content */}
-          <div className="w-[calc(100%-300px)] h-full p-4">
-            <div className="w-full h-full rounded-3xl border border-secondary/10 bg-primary shadow-xl overflow-y-auto">
+          <main className="w-[calc(100%-300px)] h-full p-4">
+            <div className="w-full h-full rounded-3xl border border-secondary/10 bg-primary shadow-2xl overflow-y-auto">
               <Routes path="/">
                 <Route path="/" element={<AdminOrdersPage />} />
                 <Route path="/products" element={<AdminProductPage />} />
@@ -79,7 +64,7 @@ export default function AdminPage() {
                 <Route path="/reviews/:productID" element={<AdminProductReviews />} />
               </Routes>
             </div>
-          </div>
+          </main>
         </>
       ) : (
         <Loader />

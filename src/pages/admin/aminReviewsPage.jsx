@@ -52,10 +52,16 @@ export default function AdminReviewsPage() {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-secondary">Reviews</h1>
+        <div>
+          <h1 className="text-2xl font-semibold text-secondary">Reviews</h1>
+          <p className="text-sm text-secondary/60">
+            Pending reviews are highlighted and shown first.
+          </p>
+        </div>
+
         <button
           onClick={load}
-          className="h-10 px-4 rounded-xl bg-secondary text-white hover:bg-secondary/80"
+          className="h-10 px-4 rounded-xl bg-secondary text-white hover:bg-secondary/80 transition"
         >
           Refresh
         </button>
@@ -70,32 +76,47 @@ export default function AdminReviewsPage() {
           rows
             .slice()
             .sort((a, b) => b.pending - a.pending)
-            .map((r) => (
-              <Link
-                key={r.productID}
-                to={`/admin/reviews/${r.productID}`}
-                className="p-4 bg-white border border-gray-200 rounded-2xl hover:border-secondary transition"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-secondary font-semibold">{r.name}</p>
-                    <p className="text-xs text-secondary/60">{r.productID}</p>
-                  </div>
+            .map((r) => {
+              const hasPending = r.pending > 0;
 
-                  <div className="text-right text-sm">
-                    <p className="text-secondary/80">
-                      Pending:{" "}
-                      <span className="font-semibold text-accent">
-                        {r.pending}
-                      </span>
-                    </p>
-                    <p className="text-secondary/70">
-                      Approved: {r.approved} | Total: {r.total}
-                    </p>
+              return (
+                <Link
+                  key={r.productID}
+                  to={`/admin/reviews/${r.productID}`}
+                  className={[
+                    "p-4 rounded-2xl border transition",
+                    hasPending
+                      ? "border-accent/40 bg-accent/5 shadow-sm"
+                      : "bg-white border-gray-200 hover:border-secondary",
+                  ].join(" ")}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-2">
+                      {hasPending && (
+                        <span className="mt-2 h-2.5 w-2.5 rounded-full bg-accent animate-pulse" />
+                      )}
+
+                      <div>
+                        <p className="text-secondary font-semibold">{r.name}</p>
+                        <p className="text-xs text-secondary/60">{r.productID}</p>
+                      </div>
+                    </div>
+
+                    <div className="text-right text-sm">
+                      <p className="text-secondary/80">
+                        Pending:{" "}
+                        <span className="font-semibold text-accent">
+                          {r.pending}
+                        </span>
+                      </p>
+                      <p className="text-secondary/70">
+                        Approved: {r.approved} | Total: {r.total}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))
+                </Link>
+              );
+            })
         )}
       </div>
     </div>
