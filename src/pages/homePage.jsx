@@ -8,6 +8,7 @@ import OrdersPage from "./ordersPage";
 import Home from "./homeContent";
 import About from "./about";
 import Contact from "./contact";
+import Footer from "../components/footer";
 
 
 
@@ -28,6 +29,7 @@ export default function HomePage(){
                     <Route path="/*" element={<h1>Page Not Found</h1>} />
                 </Routes>
            </div>
+           <Footer/>
         </div>
     )
 }
